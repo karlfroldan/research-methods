@@ -1,0 +1,70 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Technical Background}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A superstring is simply a string over
+some alphabet for which given a set of string from the same
+alphabet, the latter's members are all substrings of the former.
+To understand the SCS problem, it is best to assume some important concepts
+related to the problem itself. First, let
+us assume some set $R = \{x_1, \ldots , x_n\}$ as
+ a set of strings (or blocks) over some alphabet $\Sigma$. 
+Formally, we define a $superstring$ of $R$ as a 
+string $w$ containing each $x_i \in R$, as a substring.
+
+Following are the elementary operations associated 
+with the construction of a superstring.
+The $overlap(u, v)$ of two strings $u$ and $v$ 
+is the maximum overlap between $u$ and $v$. That is to say,
+the longest suffix of $u$ (in terms of characters) that is a prefix of $v$.
+The $prefix(u, v)$ of $u$ and $v$ is the prefix of $u$
+obtained by removing its overlap with $v$.
+Lastly, $merge(u, v)$ is the
+ concatenation of $u$ and $v$ with the overlap appearing
+only once.
+
+As an example, say we have, $\Sigma = \{a, b, c\}$ and $R = \{cbcaca, cacac\}$.
+The string $cacacbcaca$ is a superstring of $R$ while the string
+$cbcacac$ is the shortest common superstring. The
+following relations also hold: 
+
+\begin{tabular}{p{0.5cm}l}
+&$overlap(cbcaca, cacac) = caca$, \\
+&$overlap(cacac, cbcaca) = c$ ,\\
+&$prefix(cbcaca, cacac) = cb$,\\
+&$merge(cbcaca, cacac) = cbcacac$.
+\end{tabular}
+
+A $superstring$ $w$ is also defined as
+ the string $prefix(x_1, x_2) \cdot prefix(x_2, x_3) \cdots prefix(x_n, x_1) \cdot overlap(x_n, x_1)$.
+That is, a $superstring$ is simply
+ a concatenation of all the strings ``minus'' the overlapping duplicates.
+ Apparently, each superstring of a set of strings defines a permutation of the set’s elements.
+Conversely, every permutation of the set’s elements corresponds to a single superstring
+			 
+Our interest however lies on defining the SCS problem.
+Essentially, the SCS problem is: Given a set of strings $R$
+and a positive integer $K$, does $R$ have a superstring of length $K$?
+
+Figure \ref{fig:scsdp} shows the SCS Decision Problem following the template
+provided by Garey and Johnson \cite{GareyJohnson1979}.
+
+\begin{figure}[ht!]
+\centering
+\fbox{
+\begin{tabular}{p{7.5cm}}
+
+INSTANCE: \\
+Finite alphabet $\Sigma$, finite set $R$ of strings from $\Sigma^*$ and a positive integer $K$. \\
+QUESTION: \\
+Is there a string $w \in \Sigma^*$ with $\vert w\vert \leq K$ such that each string $x\in R$ is a substring of w, 
+i.e. $w=w_0 x w_1$ where  $w_0,w_1\in\Sigma^*$? \\
+\end{tabular}
+}
+\caption{SCS Decision Problem }
+\label{fig:scsdp}
+\end{figure}
+
+
+In the Compendium of NP Optimization problems published by \cite{AusielloEtAl2000} and in the list of 
+NP-Complete Problems published by \cite{GareyJohnson1979} the SCS problem appears under under Storage and Retrieval (SR).

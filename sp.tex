@@ -1,0 +1,170 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% filename    : sp.tex
+% author      : 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% BUGFIX: Save LaTeX kernel version of \@xfloat
+\makeatletter
+\let\my@xfloat\@xfloat
+\makeatother
+
+% use ateneo de naga etd class (actually modified virginia tech's etd class)
+\documentclass[oneside]{etd}
+
+% BUGFIX: Create a modified copy of \@xfloat using the kernel definition
+\makeatletter
+\def\@xfloat#1[#2]{
+	\my@xfloat#1[#2]%
+	\def\baselinestretch{1}%
+	\@normalsize \normalsize
+}
+\makeatother
+
+% use these packages
+
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\usepackage{latexsym}
+\usepackage{amsmath}
+%\usepackage[lineno5,noindent]{lgrind}
+%\usepackage{rotating} 
+%\usepackage{makeidx}
+%\usepackage{stmaryrd}
+\usepackage{float}
+\usepackage{subfigure}
+%\usepackage{cite}
+%\usepackage{moreverb}
+%\usepackage{pictexwd,dcpic}
+\usepackage{algorithm,algorithmic}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc}
+
+\usepackage{listings}
+\definecolor{cppred}{rgb}{0.6,0,0} % for strings
+\definecolor{cppgreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{cpppurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{cppdocblue}{rgb}{0.25,0.35,0.75} % doc
+ 
+\lstset{language=C++,
+basicstyle=\linespread{0.8}\ttfamily\small,
+keywordstyle=\color{cpppurple}\bfseries,
+stringstyle=\color{cppred},
+commentstyle=\color{cppgreen},
+morecomment=[s][\color{cppdocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+% stepnumber=2,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}
+
+\graphicspath{{figures/}{./}}
+
+%\renewcommand{\floatpagefraction}{0.8}
+
+\makeindex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Senior Project Documentation Title}
+\author{My Name}
+\department{Computer Science}
+\BSdegree
+\field{Information Technology}
+\degreemonth{Month Day}  % date of final defense
+\degreeyear{2020}
+
+\threestudents
+{First Student}
+{Second Student}
+{Third Student}
+
+\threestudentsheader
+{Surname1, Surname2, and Surname3}
+
+\threedegrees
+{Information Technology}
+{Computer Science}
+{Information Systems}
+
+
+\advisor
+{Adviser's Name}
+\threemembers
+{First Panel Member}
+{Second Panel Member}
+{Third Panel Member}
+\deanandchair
+{Joshua C. Martinez, MIT}
+{Marianne P. Ang, MS}
+
+\keywords{keywordOne, keywordTwo, keywordThree}
+
+
+\begin{document}
+
+\maketitle
+\makerecomm
+\makeacceptance
+\makedeclaration
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                    ABSTRACT/EXECUTIVE SUMMARY                           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{execsummary}
+	The Shortest Common Superstring (SCS) problem, known to be NP-Complete,
+	seeks the shortest string that contains all strings from a given set.
+	This paper provides a detailed summary of SCS problem including the problem's 
+	complexity and approximability, and
+	shows that DNA sequence assembly be can approached using SCS.
+	Then this paper discusses the two most popular approximation algorithms for the 
+	SCS problem namely greedy and
+	genetic algorithm. Finally, this study presents results supporting the simplicity and performance
+	guarantee of the greedy algorithm as well as the convergence of the genetic 
+	algorithm to satisfactory approximate solutions as indivuals representing
+	problem instances evolve.	
+\end{execsummary}
+
+	
+\include{misc/dedication}
+\include{misc/acknowledgements}
+
+\begingroup
+\renewcommand*{\addvspace}[1]{}
+\tableofcontents
+\listoffigures
+\listoftables
+\endgroup
+
+\beginbody
+\pagenumbering{arabic}
+
+\include{chapters/introduction}
+\include{chapters/review}
+\include{chapters/techbackground}
+\include{chapters/methodology}
+\include{chapters/results}
+\include{chapters/recommendations}
+
+\appendix
+% \include{appendices/evaltool}
+% \include{appendices/reports}
+% \include{appendices/io}
+\include{appendices/code}
+% \include{appendices/usersguide}
+
+\nocite{*}
+\bibliographystyle{siam}
+{
+\singlespace
+\bibliography{references}
+}
+
+\include{misc/vita}
+
+\end{document}

@@ -1,0 +1,89 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Review of Related Systems and Related Literature}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Several researches have provided in depth study on approximation
+algorithms for the SCS problem.
+
+Most \cite{Turner1989, Ma2009, Zaritsky2004}, however, considered a greedy algorithm to solve the SCS problem.
+The reason why greed works for shortest common superstring problem was
+explored by \cite{Ma2009}. They explained the good performance 
+of the greedy algorithm by using the smoothed analysis. 
+That is, for any  given instance $I$ of $SCS$, 
+the average approximation ratio of the 
+greedy algorithm on a small random perturbation of $I$ is $1+o(1)$. 
+
+Apart from the greedy approach, other methods including bio-inspired
+algorithms, have also been employed to solve lots of hard problems in 
+computer science including the SCS problem. 
+In \cite{Zaritsky2004}'s work, for example, four approaches for 
+finding solutions to the SCS problem: a 
+standard genetic algorithm, a novel cooperative-coevolutionary 
+algorithm, a benchmark greedy algorithm, and a parallel 
+coevolutionary-greedy approach have been compared. In the paper,
+the coevolutionary approach produced the best results.
+
+Zaritsky et al's \cite{Zaritsky2004} work served as the 
+foundation of this paper. Hence, the following algorithms,
+which have been explored and tested in the latter, have
+been extracted and validated 
+whether they are indeed generating
+good approximate solution to the SCS problem.
+
+\subsection{Greedy-SCS}
+
+The core idea of the greedy algorithm is to repeatedly merge
+ pairs of distinct strings with maximum overlap until only one remains.
+ It has been conjectured by \cite{MaierStorer1777} that the superstring
+ produced by the greedy algorithm is at most two times the optimal.
+Below is a pseudocode for the greedy algorithm:
+
+\begin{algorithm}[H]
+	\begin{algorithmic}[1]
+	\REQUIRE $R$ - set of strings
+	\ENSURE superstring of set $R$
+	\WHILE{||$R$|| > 1}
+		\STATE choose $x_1 \neq x_2 \in R$ such that $overlap(x_1,x_2)$ is maximal 
+		\STATE $R \leftarrow (R - \{x_1, x_2\}) \cup \{merge(x_1, x_2)\}$
+	\ENDWHILE
+	\RETURN remaining string in $R$
+	\end{algorithmic}
+	\caption{GREEDY(R)}
+	\label{alg:seq}
+\end{algorithm}
+
+The greedy algorithm is probably the most widely used
+heuristic used in DNA-sequencing due to its simplicity and 
+constant performance guarantee which is most likely to be factor-2.
+
+\subsection{Genetic Algorithm}
+
+In this paper, we follow the standard model for the genetic algorithm (see Algorithm \ref{alg:gga}).
+That is, the algorithm generates an initial population of 
+random candidate solutions, then 
+the process of selection based on a defined fitness function,
+crossover, and mutation are used to evolve the next generation, of which
+each individual is then evaluated and
+assigned a fitness value. These steps are repeated a
+predefined number of times or until the solution is
+satisfactory. 
+
+
+\begin{algorithm}[H]
+	\begin{algorithmic}[1]
+	\STATE $t \leftarrow 0$ \{generation number\} 
+	\STATE initialize Population$_{t}$ 
+	\STATE evaluate(Population$_{t}$)
+	\WHILE{termination condition not met}
+		\STATE select individuals from Population$_{t}$ 
+		\STATE recombine individuals
+		\STATE mutate individuals	
+		\STATE Population$_{t+1} \leftarrow $ newly created individuals
+		\STATE $t \leftarrow t + 1$
+		\STATE evaluate(Population$_{t}$) 			
+	\ENDWHILE
+	\RETURN solution derived from the best individual in Population$_{t}$
+	\end{algorithmic}
+	\caption{GENERIC GA()}
+	\label{alg:gga}
+\end{algorithm}
