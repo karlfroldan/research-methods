@@ -289,6 +289,10 @@
  \gdef\@studentsheader{#1}
 }
 
+\def\fourstudentsheader#1{
+ \gdef\@studentsheader{#1}
+}
+
 \def\deanandchair#1#2{
  \gdef\@dean{#1}
  \gdef\@deptchair{#2}
@@ -311,6 +315,22 @@
  \gdef\@firstmember{#1}
  \gdef\@secondmember{#2}
  \gdef\@thirdmember{#3} 
+}
+
+\def\fourstudents#1#2#3#4{
+  \gdef\@students{{#1}, {#2}, {#3}, and {#4}}
+  \gdef\@firststudent{#1}
+  \gdef\@secondstudent{#2}
+  \gdef\@thirdstudent{#3} 
+  \gdef\@fourthstudent{#4}
+}
+
+\def\fourdegrees#1#2#3#4{ 
+ \gdef\@studentdegs{{#1}\\{#2}\\{#3}\\{#4}}
+ \gdef\@firststudentdeg{#1}
+ \gdef\@secondstudentdeg{#2}
+ \gdef\@thirdstudentdeg{#3} 
+ \gdef\@fourthstudentdeg{#4} 
 }
 
 \def\threestudents#1#2#3{ 
@@ -380,6 +400,8 @@ in whole or in part.}\par}
 {\@degree~in \@secondstudentdeg}\par\vfill
 {\Large \@thirdstudent}\\
 {\@degree~in \@thirdstudentdeg}\par\vfill
+{\Large \@fourthstudent}\\
+{\@degree~in \@fourthstudentdeg}\par\vfill
 \@degreeword submitted to the faculty of the\\
 Department of \@faculty\\
 College of Computer Studies, \ADNU\\
@@ -407,6 +429,7 @@ developed by
   {\begin{center}{\large\bf\@firststudent}\\\@degree~in \@firststudentdeg\end{center}}
   {\begin{center}{\large\bf\@secondstudent}\\\@degree~in \@secondstudentdeg\end{center}}
   {\begin{center}{\large\bf\@thirdstudent}\\\@degree~in \@thirdstudentdeg\end{center}}
+  {\begin{center}{\large\bf\@fourthstudent}\\\@degree~in \@fourthstudentdeg\end{center}}
 \noindent
 and submitted in partial fulfillment of the requirements
 of their respective \@degree\ degrees
@@ -443,6 +466,7 @@ developed by
   {\begin{center}{\large\bf\@firststudent}\\\@degree~in \@firststudentdeg\end{center}}
   {\begin{center}{\large\bf\@secondstudent}\\\@degree~in \@secondstudentdeg\end{center}}
   {\begin{center}{\large\bf\@thirdstudent}\\\@degree~in \@thirdstudentdeg\end{center}}
+  {\begin{center}{\large\bf\@fourthstudent}\\\@degree~in \@fourthstudentdeg\end{center}}
 \noindent
 and submitted in partial fulfillment of the requirements
 of their respective \@degree\ degrees
@@ -510,11 +534,13 @@ code of our program is in fact the work of another person.
 \begin{center}
 \begin{tabular}{p{2.5in}l}
  & \textbf{\@firststudent}\\
- & 4 - \@degree\ in \@firststudentdeg\\\\
+ & 3 - \@degree\ in \@firststudentdeg\\\\
  & \textbf{\@secondstudent}\\
- & 4 - \@degree\ in \@secondstudentdeg\\\\
+ & 3 - \@degree\ in \@secondstudentdeg\\\\
  & \textbf{\@thirdstudent}\\
- & 4 - \@degree\ in \@thirdstudentdeg\\
+ & 3 - \@degree\ in \@thirdstudentdeg\\\\
+ & \textbf{\@fourthstudent}\\
+ & 3 - \@degree\ in \@fourthstudentdeg\\
 \end{tabular}
 \end{center}
 
@@ -538,7 +564,7 @@ Project Advisor
   \newpage\thispagestyle{empty}
   {{\Large\bf\begin{center}\@title\end{center}}
    \begin{center}by\\
-   \@firststudent, \@secondstudent, and \@thirdstudent\par%
+   \@firststudent, \@secondstudent, \@thirdstudent, and \@fourthstudent\par%
    \@abstractchairman\bigskip\\{\large\bf (ABSTRACT)}\end{center}}}
   {\newpage}
 
@@ -547,7 +573,7 @@ Project Advisor
   \newpage\thispagestyle{empty}
   {{\Large\bf\begin{center}\@title\end{center}}
    \begin{center}by\\
-   \@firststudent, \@secondstudent, and \@thirdstudent\par%
+    \@firststudent, \@secondstudent, \@thirdstudent, and \@fourthstudent\par%
    \@abstractchairman\bigskip\\{\large\bf EXECUTIVE SUMMARY}\end{center}}}
   {\newpage}
 
