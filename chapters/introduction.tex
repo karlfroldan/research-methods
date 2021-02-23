@@ -2,26 +2,40 @@
 \chapter{Introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Functional programming has suddenly risen to popularity 
-with examples that include Scala, Clojure, ReactJS, and 
-other languages adopting lambda expressions. Reasoning 
-about program correctness in a pure function can be done 
-in a dependently-typed, proof assistant such as Coq or 
-Agda\cite{Breitner2018}\cite{SpectorZabusky2018}\cite{ElBakouny2017}. 
-Likewise, pure functions can be easily proved by using 
-induction. Composing two proven functions into a single 
-function should also give the correct result\cite{AbelBenkeBove2005}.
+Since 2010, functional programming has been getting more 
+popular (Purescript, Typescript, ReactJS, Elm), people are 
+trying to find more ways of leveraging the relatively easier-reasonability 
+of functional programming without having to sacrifice 
+program performance. Directly proportional to the trend is 
+the developing advancements in time and space complexity 
+of different programming languages and those events are 
+inevitable due to the fact that we live in a technological 
+age. This paper’s goal is to know how can a lazy-first 
+purely functional programming language have comparable 
+performance with respect to an eager memory-safe language 
+in terms of multi-threaded programming? In turn helps in 
+the said advancements in different programming languages.
 
-This research aims to utilize the existing A* pathfinding 
-algorithm\cite{ZaghloulAlJami2017}\cite{WeinstockHolladay}
-and find a way to develop a reasonably-efficient 
-purely functional implementation of the algorithm using parallel 
-data structures such as STMs or MVars\cite{Marlow2013}.  
-The main objective of the research is 
-to find an efficient concurrent implementation of a maze solver 
-in a purely functional programming environment with comparable 
-performance and space complexity of a performant imperative 
-programming language.
+% Functional programming has suddenly risen to popularity 
+% with examples that include Scala, Clojure, ReactJS, and 
+% other languages adopting lambda expressions. Reasoning 
+% about program correctness in a pure function can be done 
+% in a dependently-typed, proof assistant such as Coq or 
+% Agda\cite{Breitner2018}\cite{SpectorZabusky2018}\cite{ElBakouny2017}. 
+% Likewise, pure functions can be easily proved by using 
+% induction. Composing two proven functions into a single 
+% function should also give the correct result\cite{AbelBenkeBove2005}.
+
+% This research aims to utilize the existing A* pathfinding 
+% algorithm\cite{ZaghloulAlJami2017}\cite{WeinstockHolladay}
+% and find a way to develop a reasonably-efficient 
+% purely functional implementation of the algorithm using parallel 
+% data structures such as STMs or MVars\cite{Marlow2013}.  
+% The main objective of the research is 
+% to find an efficient concurrent implementation of a maze solver 
+% in a purely functional programming environment with comparable 
+% performance and space complexity of a performant imperative 
+% programming language.
 
 % The Shortest Common Superstring (SCS) problem, known to be NP-Complete,
 % seeks the shortest string that contains all strings from a given set.
@@ -62,9 +76,47 @@ programming language.
 
 \section{Project Context}
 
+Reasoning about program correctness in a pure function can be done 
+in a dependently-typed, proof assistant such as Coq or 
+Agda\cite{Breitner2018}\cite{SpectorZabusky2018}\cite{ElBakouny2017}. 
+Likewise, pure functions can be easily proved by using 
+induction. Composing two proven functions into a single 
+function should also give the correct result\cite{AbelBenkeBove2005}.
+
+As more people use functional programming languages, 
+the need for pure function algorithms has greatly increased. 
+Most references such as \emph{Introduction to Algorithms},
+\emph{The Algorithm Design Manual}, and \emph{The Art of Computer Programming} 
+present algorithms in a mostly imperative or structural manner.\cite{CLRS}\cite{Skiena}\cite{Knuth1997} 
+Thus, most programmers are more familiar with imperative 
+approaches to programming.
+
+
 \section{Purpose and Description}
 
+This research aims to utilize the existing A* pathfinding algorithm
+\cite{ZaghloulAlJami2017}\cite{WeinstockHolladay}
+and find a way to develop a reasonably-efficient purely-functional 
+implementation of the algorithm using parallel data structures such 
+as STMs or MVars\cite{Marlow2013}.  
+
+The A* Pathfinding algorithm is used heavily in video games, telephone traffic, 
+and other graph traversal problems\cite{HartNilssonRaphael1968}. This research 
+aims to aid in the development of video games using the functional 
+programming paradigm in the future as video game development is dominated 
+by imperative languages.
+
 \section{Objectives}
+The main objective of the research is to find an efficient concurrent 
+implementation of a maze solver in a purely-functional programming 
+environment with comparable performance and space complexity with 
+respect to an efficient imperative programming language. The 
+researchers also aim to compare performances between Haskell and Rust 
+by creating a program such as a maze-solver that can be benchmarked using 
+both programming languages, then gather necessary information and come up with a 
+detailed analysis regarding the performances of both languages where the number 
+of CPU cores and threads as independent variables.
+
 
 % \vfill\eject
 \section{Scope and Limitations}
@@ -77,4 +129,10 @@ and guarantees a relatively safe program\cite{Jung2018}.
 
 Other purely-functional languages or lambda notation for generality
 will not be used. Other concurrent data structures besides \verb|MVar| and Software
-Transactional Memory will not be utilized.
+Transactional Memory will not be utilized. Likewise, only mazes with
+a reachable end-goal will be tested since if the A* algorithm runs 
+on unbounded mazes, that is - having no reachable end goal, the 
+algorithm will not halt.\cite{HartNilssonRaphael1968}
+
+The concrete implementation and analysis is planned to be tested on only one CPU, namely
+Intel Core i7-9750H CPU at 2.60Ghz with 6 cores and 12 logical threads.
