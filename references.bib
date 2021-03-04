@@ -64,34 +64,6 @@ doi = {10.1145/1088348.1088355}
   year           = {2013}
 }
 
-@misc{Saligrama2019,
-      title={A Practical Analysis of Rust's Concurrency Story}, 
-      author={Aditya Saligrama and Andrew Shen and Jon Gjengset},
-      year={2019},
-      eprint={1904.12210},
-      archivePrefix={arXiv},
-      primaryClass={cs.DC}
-}
-
-@article{Jung2018,
-    author = {Jung, Ralf and Jourdan, Jacques-Henri and Krebbers, Robbert and Dreyer, Derek},
-    title = {RustBelt: Securing the Foundations of the Rust Programming Language},
-    year = {2017},
-    issue_date = {January 2018},
-    publisher = {Association for Computing Machinery},
-    address = {New York, NY, USA},
-    volume = {2},
-    number = {POPL},
-    url = {https://doi.org/10.1145/3158154},
-    doi = {10.1145/3158154},
-    abstract = {Rust is a new systems programming language that promises to overcome the seemingly fundamental tradeoff between high-level safety guarantees and low-level control over resource management. Unfortunately, none of Rust's safety claims have been formally proven, and there is good reason to question whether they actually hold. Specifically, Rust employs a strong, ownership-based type system, but then extends the expressive power of this core type system through libraries that internally use unsafe features. In this paper, we give the first formal (and machine-checked) safety proof for a language representing a realistic subset of Rust. Our proof is extensible in the sense that, for each new Rust library that uses unsafe features, we can say what verification condition it must satisfy in order for it to be deemed a safe extension to the language. We have carried out this verification for some of the most important libraries that are used throughout the Rust ecosystem.},
-    journal = {Proc. ACM Program. Lang.},
-    month = dec,
-    articleno = {66},
-    numpages = {34},
-    keywords = {logical relations, Rust, separation logic, concurrency, type systems}
-}
-
 @book{CLRS,
 author = {Cormen, Thomas H. and Leiserson, Charles E. and Rivest, Ronald L. and Stein, Clifford},
 title = {Introduction to Algorithms, Third Edition},
@@ -182,3 +154,41 @@ isbn="978-3-642-21338-0"
   title        = {ThreadScope},
   howpublished = "\url{https://github.com/haskell/ThreadScope}",
 }
+
+@inproceedings{10.1145/3122955.3122956,
+author = {Mokhov, Andrey},
+title = {Algebraic Graphs with Class (Functional Pearl)},
+year = {2017},
+isbn = {9781450351829},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3122955.3122956},
+doi = {10.1145/3122955.3122956},
+abstract = { The paper presents a minimalistic and elegant approach to working with graphs in Haskell. It is built on a rigorous mathematical foundation --- an algebra of graphs --- that allows us to apply equational reasoning for proving the correctness of graph transformation algorithms. Algebraic graphs let us avoid partial functions typically caused by `malformed graphs' that contain an edge referring to a non-existent vertex. This helps to liberate APIs of existing graph libraries from partial functions.  The algebra of graphs can represent directed, undirected, reflexive and transitive graphs, as well as hypergraphs, by appropriately choosing the set of underlying axioms. The flexibility of the approach is demonstrated by developing a library for constructing and transforming polymorphic graphs. },
+booktitle = {Proceedings of the 10th ACM SIGPLAN International Symposium on Haskell},
+pages = {2–13},
+numpages = {12},
+keywords = {graph theory, algebra, Haskell},
+location = {Oxford, UK},
+series = {Haskell 2017}
+}
+
+@article{Mokhov2017,
+author = {Mokhov, Andrey},
+title = {Algebraic Graphs with Class (Functional Pearl)},
+year = {2017},
+issue_date = {October 2017},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {52},
+number = {10},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/3156695.3122956},
+doi = {10.1145/3156695.3122956},
+journal = {SIGPLAN Not.},
+month = sep,
+pages = {2–13},
+numpages = {12},
+keywords = {graph theory, Haskell, algebra}
+}
+

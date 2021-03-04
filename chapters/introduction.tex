@@ -14,14 +14,14 @@ are done by function composition. Along with this, purely-functional programming
 a subparadigm of functional programming where there are no side-effects (e.g, variable mutability).
 One of the major challenges of parallel programming is controlling the order of execution
 to prevent \emph{race conditions}, which can often lead to bugs and are hard to maintain.
-However, since some purely-functional programming languages such as Haskell\cite{HaskellSite}
+However, since purely-functional programming languages such as Haskell\cite{HaskellSite}
 have no mutability and computations lead to the same result regardless of the order, they 
 are a perfect candidate for writing parallel programs.\cite{Hammond2011} 
 This research aims to find a parallel implementation of the existing A* pathfinding algorithm
 using a purely-functional setting with attention to program performance in terms of time and space 
 complexity. \cite{ZaghloulAlJami2017, WeinstockHolladay}
 In turn, this helps in the advancement of different programming languages that feature 
-functional programming and lambda expressions, not just purely-functional languages.
+functional programming and lambda expressions when it comes to purely-functional algorithms and data structures.
 
 % Likewise, pure functions can be reasoned easier than functions with side-effects.
 % Importing pure functions into other languages that can be used as proof assistants 
@@ -84,13 +84,14 @@ Thus, the need for familiarity for functional approaches for some of the most po
 algorithms should be discovered, since people are more familiar with imperative approaches 
 and as such, it is moreoften used in developing video games than functional programming.
 
-One good reason for writing programs in a functional language is that 
+One reason for writing programs in a functional language is that 
 pure functions are easy to reason about and can especially be aided with 
 using a dependently-typed proof assistant such as Coq
 or Agda.\cite{Breitner2018,SpectorZabusky2018,ElBakouny2017}.
-Programs written in functional programming can be easily reasoned out 
+Programs written in functional programming can be easily proven out 
 by reasoning about the smaller components and composing two or more proven 
-functions into a single function and it should also give the correct result. \cite{AbelBenkeBove2005}
+functions into a single function and it should also give the correct result with respect to the input,
+provided that the algorithm is correct. \cite{AbelBenkeBove2005}
 
 \section{Purpose and Description}
 
@@ -112,20 +113,22 @@ algorithm using a purely-functional programming language such as Haskell. Likewi
 concrete comparisons between the number of cores and logical threads will be used to measure 
 the most efficient performance runtime of the algorithm.
 
-The researchers aim to create two programs that will be used in the research. The first program 
-will be used to generate a large-enough maze that will be relatively hard to solve without the aid
-of computers in a short amount of time. Another program will be written for solving the maze. The
+The researchers aim to create two programs that will be used in the research. A generator program
+that will generate an arbitrary-sized maze that will be relatively hard to solve without the aid 
+of computers in a short amount of time. And a solver program will be written for translating the output 
+of the maze generator to an algebraic graph that the A* algorithm can understand. The solver
 program will be a browser-based application that will show the maze graphically and the generated 
-path . This pathfinding program must have an efficient performance while solving the maze. To measure 
-the performance of the program, the application ThreadScope will be used to monitor the thread and
+path when the algorithm terminates. This pathfinding program must have an efficient performance while solving the maze. 
+To measure the performance of the program, the application ThreadScope will be used to monitor the thread and
 core activities while the program is being run. \cite{ThreadScope}
 % \vfill\eject
 \section{Scope and Limitations}
 
 The research will only cover solvable-mazes as the A* algorithm does not halt when there is no reachable end goal (e.g,
-the start vertex and end vertex lie on different components of one graph).\cite{HartNilssonRaphael1968} Likewise, there will be no generality
-and all programs will be written in Haskell. Translation to other functional programming languages is not a priority and thus,
-lambda notation will not be used. Other concurrent data structures besides MVar and Software Trasnactional Memory will not be utilized.
+the start vertex and end vertex lie on different components of the graph).\cite{HartNilssonRaphael1968} Likewise, there will be no generality
+and all programs will be written in Haskell. Translation to other functional programming languages is not a priority and, thus,
+lambda notation will not be used. Other concurrent data structures besides MVar and Software Trasnactional Memory will not be utilized. The 
+implementation of the graph that the research will use will be Algebraic Graphs.\cite{Mokhov2017}
 
-The concrete implementation and analysis is planned to be tested only on four CPUs such as Intel Core i7-9750H and Intel Core i5-9400.
+The concrete implementation and analysis is planned to be tested only on four CPUs such as Intel Core i7-9750H and AMD Ryzen 5 3500x.
 Other CPU architectures are not planned to be tested on.
