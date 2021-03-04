@@ -2,40 +2,33 @@
 \chapter{Introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Since 2010, functional programming has been getting more 
-popular (Purescript, Typescript, ReactJS, Elm), people are 
-trying to find more ways of leveraging the relatively easier-reasonability 
-of functional programming without having to sacrifice 
-program performance. Directly proportional to the trend is 
-the developing advancements in time and space complexity 
-of different programming languages and those events are 
-inevitable due to the fact that we live in a technological 
-age. This paper’s goal is to know how can a lazy-first 
-purely functional programming language have comparable 
-performance with respect to an eager memory-safe language 
-in terms of multi-threaded programming? In turn helps in 
-the said advancements in different programming languages.
+Pathfinding algorithms are methods of finding a path between two vertices in  
+a graph. Most pathfinding problems are concerned with finding the shortest
+path between two vertices, if there are more than one possible paths. There had 
+been many pathfinding algorithms that had been developed throughout the years 
+such as Minimum Spanning Tree (MST), Prim's Algorithm\cite{Prim1957}, and the A*
+algorithm, which will be used in this paper.\cite{HartNilssonRaphael1968}
 
-% Functional programming has suddenly risen to popularity 
-% with examples that include Scala, Clojure, ReactJS, and 
-% other languages adopting lambda expressions. Reasoning 
-% about program correctness in a pure function can be done 
-% in a dependently-typed, proof assistant such as Coq or 
-% Agda\cite{Breitner2018}\cite{SpectorZabusky2018}\cite{ElBakouny2017}. 
-% Likewise, pure functions can be easily proved by using 
-% induction. Composing two proven functions into a single 
-% function should also give the correct result\cite{AbelBenkeBove2005}.
+Functional programming is one of the major programming paradigms where computations 
+are done by function composition. Along with this, purely-functional programming is 
+a subparadigm of functional programming where there are no side-effects (e.g, variable mutability).
+One of the major challenges of parallel programming is controlling the order of execution
+to prevent \emph{race conditions}, which can often lead to bugs and are hard to maintain.
+However, since some purely-functional programming languages such as Haskell\cite{HaskellSite}
+have no mutability and computations lead to the same result regardless of the order, they 
+are a perfect candidate for writing parallel programs.\cite{Hammond2011} 
+This research aims to find a parallel implementation of the existing A* pathfinding algorithm
+using a purely-functional setting with attention to program performance in terms of time and space 
+complexity. \cite{ZaghloulAlJami2017, WeinstockHolladay}
+In turn, this helps in the advancement of different programming languages that feature 
+functional programming and lambda expressions, not just purely-functional languages.
 
-% This research aims to utilize the existing A* pathfinding 
-% algorithm\cite{ZaghloulAlJami2017}\cite{WeinstockHolladay}
-% and find a way to develop a reasonably-efficient 
-% purely functional implementation of the algorithm using parallel 
-% data structures such as STMs or MVars\cite{Marlow2013}.  
-% The main objective of the research is 
-% to find an efficient concurrent implementation of a maze solver 
-% in a purely functional programming environment with comparable 
-% performance and space complexity of a performant imperative 
-% programming language.
+% Likewise, pure functions can be reasoned easier than functions with side-effects.
+% Importing pure functions into other languages that can be used as proof assistants 
+% such as Coq or Agda\cite{Breitner2018, SpectorZabusky2018, ElBakouny2017} is possible 
+% and gives a better assurance of a bug-free parallel system.
+
+
 
 % The Shortest Common Superstring (SCS) problem, known to be NP-Complete,
 % seeks the shortest string that contains all strings from a given set.
@@ -75,27 +68,34 @@ the said advancements in different programming languages.
 % a greedy algorithm. 
 
 \section{Project Context}
+The A* pathfinding algorithm is now mostly used as a pathfinding algorithm
+for video games. While most video games are written in an imperative and 
+object-oriented programming languages such as C\#, C++, and JavaScript, it is 
+entirely possible to write video games in functional programming languages 
+using a reactive functional programming paradigm. \cite{Cheong2006}
 
-Reasoning about program correctness in a pure function can be done 
-in a dependently-typed, proof assistant such as Coq or 
-Agda\cite{Breitner2018}\cite{SpectorZabusky2018}\cite{ElBakouny2017}. 
-Likewise, pure functions can be easily proved by using 
-induction. Composing two proven functions into a single 
-function should also give the correct result\cite{AbelBenkeBove2005}.
+Functional programming had been getting more popular recently 
+with more people using ReactJS, TypeScript, PureScript, and Scala.
+However, imperative programming still dominates the industry, thus more algorithms 
+are written for imperative programs. It can be observed that most algorithm books 
+are written with imperative programming in mind such as \emph{Introduction to Algorithms}\cite{CLRS}, 
+\emph{The Algorithm Design Manual}\cite{Skiena}, and \emph{The Art of Computer Programming}\cite{Knuth1997}.
+Thus, the need for familiarity for functional approaches for some of the most popular 
+algorithms should be discovered, since people are more familiar with imperative approaches 
+and as such, it is moreoften used in developing video games than functional programming.
 
-As more people use functional programming languages, 
-the need for pure function algorithms has greatly increased. 
-Most references such as \emph{Introduction to Algorithms},
-\emph{The Algorithm Design Manual}, and \emph{The Art of Computer Programming} 
-present algorithms in a mostly imperative or structural manner.\cite{CLRS}\cite{Skiena}\cite{Knuth1997} 
-Thus, most programmers are more familiar with imperative 
-approaches to programming.
-
+One good reason for writing programs in a functional language is that 
+pure functions are easy to reason about and can especially be aided with 
+using a dependently-typed proof assistant such as Coq
+or Agda.\cite{Breitner2018,SpectorZabusky2018,ElBakouny2017}.
+Programs written in functional programming can be easily reasoned out 
+by reasoning about the smaller components and composing two or more proven 
+functions into a single function and it should also give the correct result. \cite{AbelBenkeBove2005}
 
 \section{Purpose and Description}
 
 This research aims to utilize the existing A* pathfinding algorithm
-\cite{ZaghloulAlJami2017}\cite{WeinstockHolladay}
+\cite{ZaghloulAlJami2017,WeinstockHolladay}
 and find a way to develop a reasonably-efficient purely-functional 
 implementation of the algorithm using parallel data structures such 
 as STMs or MVars\cite{Marlow2013}.  
@@ -107,32 +107,25 @@ programming paradigm in the future as video game development is dominated
 by imperative languages.
 
 \section{Objectives}
-The main objective of the research is to find an efficient concurrent 
-implementation of a maze solver in a purely-functional programming 
-environment with comparable performance and space complexity with 
-respect to an efficient imperative programming language. The 
-researchers also aim to compare performances between Haskell and Rust 
-by creating a program such as a maze-solver that can be benchmarked using 
-both programming languages, then gather necessary information and come up with a 
-detailed analysis regarding the performances of both languages where the number 
-of CPU cores and threads as independent variables.
+The research aims to find an efficient parallel implementation of the A* pathfinding 
+algorithm using a purely-functional programming language such as Haskell. Likewise, 
+concrete comparisons between the number of cores and logical threads will be used to measure 
+the most efficient performance runtime of the algorithm.
 
-
+The researchers aim to create two programs that will be used in the research. The first program 
+will be used to generate a large-enough maze that will be relatively hard to solve without the aid
+of computers in a short amount of time. Another program will be written for solving the maze. The
+program will be a browser-based application that will show the maze graphically and the generated 
+path . This pathfinding program must have an efficient performance while solving the maze. To measure 
+the performance of the program, the application ThreadScope will be used to monitor the thread and
+core activities while the program is being run. \cite{ThreadScope}
 % \vfill\eject
 \section{Scope and Limitations}
-The researchers will utilize Haskell for concrete implementation 
-of the parallel A* algorithm in a functional programming environment.
-Likewise, for performance comparison, the researchers 
-will use the Rust programming language due to some of its features having
-similarities with Haskell such as correct concurrent programs\cite{Saligrama2019}
-and guarantees a relatively safe program\cite{Jung2018}.
 
-Other purely-functional languages or lambda notation for generality
-will not be used. Other concurrent data structures besides \verb|MVar| and Software
-Transactional Memory will not be utilized. Likewise, only mazes with
-a reachable end-goal will be tested since if the A* algorithm runs 
-on unbounded mazes, that is - having no reachable end goal, the 
-algorithm will not halt.\cite{HartNilssonRaphael1968}
+The research will only cover solvable-mazes as the A* algorithm does not halt when there is no reachable end goal (e.g,
+the start vertex and end vertex lie on different components of one graph).\cite{HartNilssonRaphael1968} Likewise, there will be no generality
+and all programs will be written in Haskell. Translation to other functional programming languages is not a priority and thus,
+lambda notation will not be used. Other concurrent data structures besides MVar and Software Trasnactional Memory will not be utilized.
 
-The concrete implementation and analysis is planned to be tested on only one CPU, namely
-Intel Core i7-9750H CPU at 2.60Ghz with 6 cores and 12 logical threads.
+The concrete implementation and analysis is planned to be tested only on four CPUs such as Intel Core i7-9750H and Intel Core i5-9400.
+Other CPU architectures are not planned to be tested on.
