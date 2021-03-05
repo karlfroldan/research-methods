@@ -4,7 +4,7 @@
 
 Pathfinding algorithms are methods of finding a path between two vertices in  
 a graph. Most pathfinding problems are concerned with finding the shortest
-path between two vertices, if there are more than one possible paths. There had 
+path between two vertices, if there is more than one possible path. There had 
 been many pathfinding algorithms that had been developed throughout the years 
 such as Minimum Spanning Tree (MST), Prim's Algorithm\cite{Prim1957}, and the A*
 algorithm, which will be used in this paper.\cite{HartNilssonRaphael1968}
@@ -68,34 +68,44 @@ functional programming and lambda expressions when it comes to purely-functional
 % a greedy algorithm. 
 
 \section{Project Context}
-The A* pathfinding algorithm is now mostly used as a pathfinding algorithm
-for video games. While most video games are written in an imperative and 
-object-oriented programming languages such as C\#, C++, and JavaScript, it is 
-entirely possible to write video games in functional programming languages 
-using a reactive functional programming paradigm. \cite{Cheong2006}
+The A* pathfinding algorithm is mostly used as a pathfinding algorithm
+for video games. While most games are written in an imperative and 
+object-oriented language such as C\#, C++, and JavaScript, it is 
+possible to write video games in a functional languages
+using a reactive functional programming approach.\cite{Cheong2006}
+Though, functional programming had been getting more popular recently, imperative programming 
+still dominates the industry, thus more algorithms are designed with imperative programs in mind.\cite{CLRS,Skiena,Knuth1997}
+Thus, the need for functional approaches to familiar algorithms should be addressed in order 
+for functional programming to be used more widely in video games. 
+However, algorithms designed for imperative programming does not translate as well when implemented in a 
+functional style such as quicksort having a worst-case space complexity of $O(n)$ for the imperative approach 
+while its functional version would have a worst-case space complexity of 
+$O(n^2)$.\footnote{Recursion in Haskell copies 
+the entire subarray instead of mutating the original array elements, 
+as opposed to the quicksort implementation of Hoare. Thus, one can 
+argue that Haskell's quicksort is not a \emph{true} quicksort.}
 
-Functional programming had been getting more popular recently 
-with more people using ReactJS, TypeScript, PureScript, and Scala.
-However, imperative programming still dominates the industry, thus more algorithms 
-are written for imperative programs. It can be observed that most algorithm books 
-are written with imperative programming in mind such as \emph{Introduction to Algorithms}\cite{CLRS}, 
-\emph{The Algorithm Design Manual}\cite{Skiena}, and \emph{The Art of Computer Programming}\cite{Knuth1997}.
-Thus, the need for familiarity for functional approaches for some of the most popular 
-algorithms should be discovered, since people are more familiar with imperative approaches 
-and as such, it is moreoften used in developing video games than functional programming.
+The advantages of functional programming, however, lies with its \emph{referential transparency}.
+In imperative styles, a variable $x$ can change their values over time and may be difficult to track.
+This is not the case with functional approaches wherein functional expressions always have the same 
+definition throughout the runtime of the program.\cite{Kesseler1996,Hammond2011} 
+As such, it is easier to mathematically prove the correctness 
+of programs in the functional style, especially when combined with proof assistants such as Coq
+or Agda.\cite{Breitner2018,SpectorZabusky2018,ElBakouny2017} Splitting functions into smaller functions and reasoning 
+about those smaller components much like lemmas would mean that functions would be modular and composed of proven
+subfunctions or subroutines.\cite{AbelBenkeBove2005,Hughes1989} 
 
-One reason for writing programs in a functional language is that 
-pure functions are easy to reason about and can especially be aided with 
-using a dependently-typed proof assistant such as Coq
-or Agda.\cite{Breitner2018,SpectorZabusky2018,ElBakouny2017}.
-Programs written in functional programming can be easily proven out 
-by reasoning about the smaller components and composing two or more proven 
-functions into a single function and it should also give the correct result with respect to the input,
-provided that the algorithm is correct. \cite{AbelBenkeBove2005}
+Due to the nature of \emph{referential transparency} in functional programming languages,
+functional languages are an excellent candidate for parallel programming. In imperative programming,
+writing parallel programs would mean that there are non-deterministic separate threads that needs to be 
+tracked to ensure that it is correct. Since there is a shared variable, multiple threads modifying the shared 
+variable could mean bugs. However, since functional languages don't have a mutable states and there are reduced
+instances of shared variables abstracted from the programmer, the order of execution of pure functions does not 
+matter as the program will still yield the same results.\cite{Kesseler1996}
 
 \section{Purpose and Description}
 
-This research aims to utilize the existing A* pathfinding algorithm
+This research aims to utilize the existing parallel A* pathfinding algorithm
 \cite{ZaghloulAlJami2017,WeinstockHolladay}
 and find a way to develop a reasonably-efficient purely-functional 
 implementation of the algorithm using parallel data structures such 
@@ -103,24 +113,28 @@ as STMs or MVars\cite{Marlow2013}.
 
 The A* Pathfinding algorithm is used heavily in video games, telephone traffic, 
 and other graph traversal problems\cite{HartNilssonRaphael1968}. This research 
-aims to aid in the development of video games using the functional 
+aims to aid in the development of video games and other uses where a parallel 
+A* algorithm would be beneficial using the functional 
 programming paradigm in the future as video game development is dominated 
 by imperative languages.
 
 \section{Objectives}
-The research aims to find an efficient parallel implementation of the A* pathfinding 
-algorithm using a purely-functional programming language such as Haskell. Likewise, 
-concrete comparisons between the number of cores and logical threads will be used to measure 
-the most efficient performance runtime of the algorithm.
+The main objective of the research is to find an efficient parallel purely-functional implementation 
+of the A* pathfinding algorithm. The research will be done mostly in Haskell with some exceptions.
+Likewise, concrete comparisons between the number of cores and logical threads will be used to measure 
+the most efficient performance runtime and space complexity of the algorithm.
 
-The researchers aim to create two programs that will be used in the research. A generator program
-that will generate an arbitrary-sized maze that will be relatively hard to solve without the aid 
-of computers in a short amount of time.\cite{Buck2015} And a solver program will be written for translating the output 
-of the maze generator to an algebraic graph that the A* algorithm can understand. The solver
-program will be a browser-based application that will show the maze graphically and the generated 
-path when the algorithm terminates. This pathfinding program must have an efficient performance while solving the maze. 
-To measure the performance of the program, the application ThreadScope will be used to monitor the thread and
-core activities while the program is being run. \cite{ThreadScope}
+The researchers aim to complete the following specific tasks:
+\begin{itemize}
+    \item Write a \emph{generator} that will generate an arbitrary-sized maze. The maze should be relatively 
+        hard to solve without the aid of computers in a short amount of time.\cite{Buck2015}
+    \item And a \emph{solver} program that will be written in Haskell, a lazy purely-functional programming language,
+        for translating the output of the generator to a graph.\cite{HaskellSite}
+    \item The solver program should have a web-based user interface where the researchers can view the maze and how 
+        the solver program was able to solve it correctly.
+    \item Performance of the solution shall be measured by using ThreadScope to monitor the thread and core activities 
+        while the program is being run.\cite{ThreadScope}
+\end{itemize}
 % \vfill\eject
 \section{Scope and Limitations}
 
