@@ -1,33 +1,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The A* pathfinding algorithm is a best-first pathfinding algotithm for graphs commonly used 
+for graph traversal applications such as artificial intelligence, video games, flight paths, and more.
+However, while most games are written in an imperative and object-oriented language such as C\#, C++, and 
+JavaScript, it is possible to write video games in a functional language using a reactive 
+functional programming approach.\cite{Cheong2006} Likewise, the need for other correct critical software 
+led organizations such as NASA to use Haskell\cite{HaskellSite}, a purely-functional programming language, to 
+be used in systems where high-level assurance and provable programs are a must.\cite{NasaCopilot2020}
 
-Pathfinding algorithms are methods of finding a path between two vertices in  
-a graph. Most pathfinding problems are concerned with finding the shortest
-path between two vertices, if there is more than one possible path. There had 
-been many pathfinding algorithms that had been developed throughout the years 
-such as Minimum Spanning Tree (MST), Prim's Algorithm\cite{Prim1957}, and the A*
-algorithm, which will be used in this paper.\cite{HartNilssonRaphael1968}
-
-Functional programming is one of the major programming paradigms where computations 
-are done by function composition. Along with this, purely-functional programming is 
-a subparadigm of functional programming where there are no side-effects (e.g, variable mutability).
-One of the major challenges of parallel programming is controlling the order of execution
-to prevent \emph{race conditions}, which can often lead to bugs and are hard to maintain.
-However, since purely-functional programming languages such as Haskell\cite{HaskellSite}
-have no mutability and computations lead to the same result regardless of the order, they 
-are a perfect candidate for writing parallel programs.\cite{Hammond2011} 
-This research aims to find a parallel implementation of the existing A* pathfinding algorithm
-using a purely-functional setting with attention to program performance in terms of time and space 
-complexity. \cite{ZaghloulAlJami2017, WeinstockHolladay}
-In turn, this helps in the advancement of different programming languages that feature 
-functional programming and lambda expressions when it comes to purely-functional algorithms and data structures.
-
-% Likewise, pure functions can be reasoned easier than functions with side-effects.
-% Importing pure functions into other languages that can be used as proof assistants 
-% such as Coq or Agda\cite{Breitner2018, SpectorZabusky2018, ElBakouny2017} is possible 
-% and gives a better assurance of a bug-free parallel system.
-
+This paper assumes concrete differences between \emph{parallel} and \emph{concurrent} where the former 
+is defined to be a hardware feature of having multiple processors or cores to compute a problem whereas the 
+latter is defined to be a software-based approach to decrease the impact of computation bottlenecks by 
+switching between different computations when a computation takes too long.\cite{SilberschatzGalvin2012} One of the major challenges 
+of parallel programming is controlling the order of execution to prevent \emph{race conditions}, 
+which can often lead to bugs and are hard to maintain. However, since pure functional languages, such as Haskell,
+have no mutability and computations lead to the same result regardless of the order, they are a perfect candidate 
+for writing parallel programs.\cite{Hammond2011}
+This research aims to find a parallel implementation of the existing A* pathfinding algorithms using a 
+purely-functional setting with attention to program performance. In turn, this helps in the advancement 
+of different functional programming approaches for parallel graph computations which could eventually lead
+to critical systems to use a more provable programming language.
 
 
 % The Shortest Common Superstring (SCS) problem, known to be NP-Complete,
@@ -68,40 +61,27 @@ functional programming and lambda expressions when it comes to purely-functional
 % a greedy algorithm. 
 
 \section{Project Context}
-The A* pathfinding algorithm is mostly used as a pathfinding algorithm
-for video games. While most games are written in an imperative and 
-object-oriented language such as C\#, C++, and JavaScript, it is 
-possible to write video games in a functional languages
-using a reactive functional programming approach.\cite{Cheong2006}
-Though, functional programming had been getting more popular recently, imperative programming 
-still dominates the industry, thus more algorithms are designed with imperative programs in mind.\cite{CLRS,Skiena,Knuth1997}
-Thus, the need for functional approaches to familiar algorithms should be addressed in order 
-for functional programming to be used more widely in video games. 
-However, algorithms designed for imperative programming does not translate as well when implemented in a 
-functional style such as quicksort having a worst-case space complexity of $O(n)$ for the imperative approach 
-while its functional version would have a worst-case space complexity of 
-$O(n^2)$.\footnote{Recursion in Haskell copies 
-the entire subarray instead of mutating the original array elements, 
-as opposed to the quicksort implementation of Hoare. Thus, one can 
-argue that Haskell's quicksort is not a \emph{true} quicksort.}
+The current video game industry is dominated by imperative programmers, even though functional programming had been 
+getting more popular recently, especially in web-programming, due to to languages such as TypeScript and PureScript and 
+frameworks such as ReactJS which favors a reactive functional approach. Thus, most beginners are exposed to 
+imperative algorithms, such as the A*, due to the popularty of algorithm books with imperative programming in them.\cite{CLRS,Knuth1997,Skiena}
+However, algorithms designed for imperative programming may not translate as well when implemented in a functional style.
+The quicksort specification maintains a worst-case space complexity of $O(n)$. However, when the algorithm is written in a 
+pure-function style, it will have to copy every subarray due to its recursive nature, thus yielding  a worst-case space complexity 
+of $O(n^2)$. 
 
-The advantages of functional programming, however, lies with its \emph{referential transparency}.
-In imperative styles, a variable $x$ can change their values over time and may be difficult to track.
-This is not the case with functional approaches wherein functional expressions always have the same 
-definition throughout the runtime of the program.\cite{Kesseler1996,Hammond2011} 
-As such, it is easier to mathematically prove the correctness 
-of programs in the functional style, especially when combined with proof assistants such as Coq
-or Agda.\cite{Breitner2018,SpectorZabusky2018,ElBakouny2017} Splitting functions into smaller functions and reasoning 
-about those smaller components much like lemmas would mean that functions would be modular and composed of proven
-subfunctions or subroutines.\cite{AbelBenkeBove2005,Hughes1989} 
-
-Due to the nature of \emph{referential transparency} in functional programming languages,
-functional languages are an excellent candidate for parallel programming. In imperative programming,
-writing parallel programs would mean that there are non-deterministic separate threads that needs to be 
-tracked to ensure that it is correct. Since there is a shared variable, multiple threads modifying the shared 
-variable could mean bugs. However, since functional languages don't have a mutable states and there are reduced
-instances of shared variables abstracted from the programmer, the order of execution of pure functions does not 
-matter as the program will still yield the same results.\cite{Kesseler1996}
+The advantages of functional programming lies with its \emph{referential transparency} which means that 
+a function definition or a variable will never change its definition throughout the runtime of the program.\cite{Kesseler1996,Hammond2011}
+Hence, mathematically proving functional programs might be easier and can be aided by proof assistants such as  
+Coq or Agda.\cite{Breitner2018,SpectorZabusky2018,ElBakouny2017} Likewise, splitting functions into smaller functions and 
+reasoning about those smaller components much like lemmas would mean that functions would be modular and composed of 
+proven subfunctions.\cite{AbelBenkeBove2005,Hughes1989} Hence, functional programming languages are 
+excellent candidates for parallel programming since the languages do not have mutable states and are therefore, instances of
+shared variables are abstracted away from the programmer. Similarly, the order of execution of pure functions does not matter 
+as the program will still yield the same results.\cite{Kesseler1996} 
+A parallel and purely-functional approach to the A* algorithm would eventually lead to more applications such as
+shortest distance in a map, flight paths, web server searching, and more to use a more provable and type-safe language which 
+could lead to less system failures and high availability.
 
 \section{Purpose and Description}
 
