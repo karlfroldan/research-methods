@@ -2,9 +2,39 @@
 \chapter{Review of Related Systems and Related Literature}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We would write something on this section about the A* pathfinding algorithms and 
-other parallel graph pathfinding algorithms written on both imperative and functional languages.
+Due to the trend of parallelization in the modern computing era, \cite{Rios2011,WeinstockHolladay,ZaghloulAlJami2017,Sanz2016}
+several researchers developed more efficient and faster implementations 
+of the A* algorithm by parallizing the algorithm in various ways.
 
+\section{The A* Algorithm}
+Here, we shall describe the original A* algorithm by Hart, Nilsson, and Raphael.\cite{HartNilssonRaphael1968}
+A pure-function pseudocode will be implemented instead of the usual imperative 
+pseudocode. But the pseudocode still follows the specifications of the original paper.
+
+\section{Parallel A* Algorithm}
+Here, we shall discuss the naive implementation of Zaghloul\cite{ZaghloulAlJami2017}
+where the researchers parallelized A* using MISD and compared the running times and speed up 
+of the algorithm in solving some problems based ont he number of cores of the computer it was run on.
+
+Also, we shall visit the implementations by Rios and Chaomowicz\cite{Rios2011}
+which used a more enhanced implementation of the single-core bidirectional pathfinding algorithm by 
+Kaindl and Kainz\cite{KainlKainz1997} by parallelizing the two directions on two CPU cores.
+
+Likewise, we shall also visit HDA* by Kishimoto, Fukunaga, and Botea\cite{Kishimoto2009} on how it 
+assigned ownership of vertices between different CPU cores by hashing and the performance comparison of
+Holladay and Weinstock\cite{WeinstockHolladay}.
+
+Lastly, we compare how the HDA* may be a problem for Haskell since 
+Haskell's parallelism is abstracted. Instead, the paper will define 
+another method of parallelizing the A* algorithm on a multicore machine 
+using Haskell.
+
+\section{Algebraic Graphs}
+This section will discuss the graph library that the paper will use.
+Since the default \verb|container| library of Haskell may result to 
+malformed graphs that may lead to incorrect software, this paper will 
+instead utilize algebraic graphs due to its easy workability in monadic 
+environments.\cite{Mokhov2017,Marlow2013}
 % Several researches have provided in depth study on approximation
 % algorithms for the SCS problem.
 
