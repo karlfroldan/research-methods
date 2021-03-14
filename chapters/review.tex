@@ -8,8 +8,39 @@ of the A* algorithm by parallizing the algorithm in various ways.
 
 \section{The A* Algorithm}
 Here, we shall describe the original A* algorithm by Hart, Nilsson, and Raphael.\cite{HartNilssonRaphael1968}
-A pure-function pseudocode will be implemented instead of the usual imperative 
+A pure-function pseudocode\ref{seqAStar} will be implemented instead of the usual imperative 
 pseudocode. But the pseudocode still follows the specifications of the original paper.
+
+\begin{algorithm}
+    \caption{Sequential A* Algorithm}
+    \label{seqAStar}
+    \begin{algorithmic}
+        \REQUIRE $G$ - a weighted labeled graph.
+        \REQUIRE $(\psi, \xi)$ - a tuple of two sets: the open set and the closed set
+        \REQUIRE $h$ - the heuristic function. $h(n)\neq 0$ or this equates to Dijkstra's Algorithm.
+        \REQUIRE $(\sigma, \gamma)$ - a tuple of two vertices in $G$: the start vertex and end vertex.
+        \ENSURE  $p$ - The shortest path from $\psi$ to $\xi$. 
+        
+        \STATE let $S$ be a homogenous set of vertices in a graph.
+        \STATE astar :: Graph $\rightarrow$ ($S$, $S$) $\rightarrow$ ((Int, Int) 
+            $\rightarrow$ (Int, Int) $\rightarrow$ Int) $\rightarrow$ (Vertex, Vertex) $\rightarrow$ Path 
+        \STATE astar g s h se p = \textbf{WRITE THE ALGORITHM LATER}.
+    \end{algorithmic}
+\end{algorithm}
+
+% \begin{algorithm}[H]
+% 	\begin{algorithmic}[1]
+% 	\REQUIRE $R$ - set of strings
+% 	\ENSURE superstring of set $R$
+% 	\WHILE{||$R$|| > 1}
+% 		\STATE choose $x_1 \neq x_2 \in R$ such that $overlap(x_1,x_2)$ is maximal 
+% 		\STATE $R \leftarrow (R - \{x_1, x_2\}) \cup \{merge(x_1, x_2)\}$
+% 	\ENDWHILE
+% 	\RETURN remaining string in $R$
+% 	\end{algorithmic}
+% 	\caption{GREEDY(R)}
+% 	\label{alg:seq}
+% \end{algorithm}
 
 \section{Parallel A* Algorithm}
 Here, we shall discuss the naive implementation of Zaghloul\cite{ZaghloulAlJami2017}
@@ -29,12 +60,25 @@ Haskell's parallelism is abstracted. Instead, the paper will define
 another method of parallelizing the A* algorithm on a multicore machine 
 using Haskell.
 
-\section{Algebraic Graphs}
-This section will discuss the graph library that the paper will use.
-Since the default \verb|container| library of Haskell may result to 
-malformed graphs that may lead to incorrect software, this paper will 
-instead utilize algebraic graphs due to its easy workability in monadic 
-environments.\cite{Mokhov2017,Marlow2013}
+\section{Inductive Graphs}
+This section will discuss the \verb|functional graph library| as described by Erwig.\cite{Erwig2001}
+Inductive graphs can be constructed monadically which will be of advantage when writing 
+parallelizing an algorithm since parallel code can only be executed monadically.
+
+We use both inductive graphs for the sequential implementation (not a monad) and for the parallel
+implementation (monad).
+
+\section{Real-time Performance of Functional Programs}
+In this section, we compare the usefulness of functional programs in real-time situations, that is, in 
+applications were time is critical such as GPS systems and flight guidance software.\cite{Frame2014}
+Since we're primarily concerned with developing a fast-enough parallel program for a correct software that 
+would be needed for critical systems, we have to compare the performance of our program with recent imperative 
+implementations. This should be stated here.
+
+Likewise, we make use of Tim Harris, Simon Marlow, and Simon Peyton Jones' research on the parallel 
+performance of Haskell and overhead costs when using parallel data structures.\cite{Harris2005}
+
+
 % Several researches have provided in depth study on approximation
 % algorithms for the SCS problem.
 
