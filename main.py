@@ -23,9 +23,9 @@ def write_binary_maze(grid, size):
         for x in range(size):
             
             if grid[y][x] == "+":
-                binary_str += "1"
+                binary_str += "1 "
             else:
-                binary_str += "0"
+                binary_str += "0 "
         binary_str += "\n"
         
         
@@ -88,9 +88,18 @@ def loop_generate(y, x, grid, size, k):
         
         
         # open the closed cell
-        grid[q[len(q)-1][0]][q[len(q)-1][1]] = " "
+
+
+        # increase or decrease " " in the seedsz list to increase/decrease maze paths
+        seedsz = [" ", "C", " ", " ", " ", " "]
+        status = rn.choice(seedsz)
+
+        grid[q[len(q)-1][0]][q[len(q)-1][1]] = statuss
         neighbors = get_neighbors(y, x, grid, size)
         
+        if status == " ":
+            progress += 1
+            print(int(progress/k * 100), "% - generating maze")
         
         #show_image(grid,size)
         
@@ -114,8 +123,8 @@ def loop_generate(y, x, grid, size, k):
         
         # progress counter
         
-        progress += 1
-        print(int(progress/k * 100), "% - generating maze")
+        
+        
         
         
         
