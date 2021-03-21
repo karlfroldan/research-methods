@@ -62,7 +62,7 @@ runtime efficiency will decrease when the number of threads are increased due to
 of garbage collection and thread creation. 
 
 \subsection{Bidirectional A* Search Algorithms}
-Bidirectional is said to be possible when there is exactly one start vertex and exactly one goal vertex.
+Bidirectional search is said to be possible when there is exactly one start vertex and exactly one goal vertex.
 Since the computer cannot differentiate between the two if they are reversible, it is possible to start 
 searching from the goal $g$ to the start $s$ and vice versa.\cite{KainlKainz1997} Bidirectional search 
 is useful when implemented on a unidirectional multigraph(\ref{uni-multigraph1})
@@ -95,7 +95,7 @@ The algorithm halts when there is one search side with no more candidates to be 
 
 
     \begin{figure}
-        \caption{A unidirectional multigraph}
+        \caption{A directional multigraph}
         \label{uni-multigraph1}
         \begin{center}
             \begin{tikzpicture}
@@ -129,7 +129,7 @@ The algorithm halts when there is one search side with no more candidates to be 
     \end{figure}
 
 \subsubsection{Parallel New Bidirectional A* (PNBA*)}
-PNBA* is proposed by Rios and Chaimowicz by parallelizing the NBA* algorithm.\cite{Rios2011}
+PNBA* was proposed by Rios and Chaimowicz by parallelizing the NBA* algorithm.\cite{Rios2011}
 PNBA* leverages on a shared memory model and runs both search processes in parallel. Due to this, the PNBA* algorithm is 
 faster than the NBA* and thus has a better runtime performance. The implementation of PNBA* has a variable $\mathcal{S}$, like the 
 NBA*, shared by both processes and contains the vertices, say $v$, with finite labels $g(v)$. However, since both $\mathcal{L}$
@@ -159,18 +159,33 @@ compared to the other parallel implementations and the sequential A* algorithm. 
 an average of 5 times when using 8 cores. Kishimoto, Fukunaga, and Botea expounded further that the HDA* is also efficient in a 
 distributed computing environment by showing a speedup of an average of 30-60 times in a 128-core distributed computer.\cite{Kishimoto2009}
 
-
 \section{Real-time Performance of Functional Programs}
-In this section, we compare the usefulness of functional programs in real-time situations, that is, in 
-applications were time is critical such as GPS systems and flight guidance software.\cite{Frame2014}
-Since we're primarily concerned with developing a fast-enough parallel program for a correct software that 
-would be needed for critical systems, we have to compare the performance of our program with recent imperative 
-implementations. This should be stated here.
+The dominant programming languages used for time-critical software systems such as GPS systems and flight guidance softwares 
+are written in mid-level programming languages that has direct hardware access such as C or C++. Frame and Coffey were concerned that 
+the correctness of C and C++ were refutable and thus benchmarked and compared the real-time performance of the same 
+program written in C++ and in Haskell, the latter being a programming language known to its correctness due to its strict typing rules.\cite{Frame2014}
+Frame and Coffey hypothesized that imperative and functional programming may differ in their implementations but both are powerful enough to 
+take on math-intensive problems.
 
-Likewise, we make use of Tim Harris, Simon Marlow, and Simon Peyton Jones' research on the parallel 
-performance of Haskell and overhead costs when using parallel data structures.\cite{Harris2005}
+Scott and Frame also tacked the ease of use of the programming language to the programmers and they concluded that 
+the functional programming language may seem unfamiliar to an imperative language user at first but may be easier to 
+understand and maintain in the long run.\cite{Frame2014} This is especially true in static typing languages such as Haskell 
+where programmers will be able to make less typing errors such as adding a \verb|uint_8| to a \verb|bool| which may cause an overflow.\cite{Hanenberg2014}
+The paper by Scott and Frame showed that functional programs are less verbose and are more expressive than their imperative counterparts 
+for the same problem, however it still lacks in performance power. However, despite the slower runtime performance of functional programs, mathematically 
+provable functional programs are still capable in being written as runtime verification systems in ultra-critical systems, as 
+demonstrated by the National Aeronautics and Space Administration (NASA).\cite{NasaCopilot2020} Due to this, it is 
+important to develop more performant, perhaps parallel, algorithms for functional programs especially in the area of 
+combinatorial optimization, such as the problem posed in this paper.
 
-
+Harris, Marlow, and Jones evaluated the parallel performance of Haskell and overhead costs when using parallel data structures.
+Since Haskell is a garbage collected programming language, there would be some performance cost whenever data is being garbage collected.
+However, due to the lazy-nature of Haskell, unecessary data that will never be used in any computation will not be evaluated.
+The parallel impleentation of the Glasgow Haskell Compiler (GHC) does not really state explicit parallelism. Instead, a programmer may 
+annotate (called \emph{sparking}) whether a computation can be parallelized or not with different strategies. 
+It is up to the Haskell runtime system whether the annotation will be assigned to a different processor or thread. 
+This abstraction enables the programmer to be worry-free about how parallelism will be implemented and diverts it to 
+other matters such as performance and how many sparks will be created.\cite{Harris2005,Marlow2009} 
 % Several researches have provided in depth study on approximation
 % algorithms for the SCS problem.
 
