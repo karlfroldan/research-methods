@@ -90,7 +90,7 @@ In NBA*, all vertices $v\in V$ are initially labeled $g(v)=\infty$ and the set $
 permanent labels. Likewise, there are shared variables $\mathcal{L}=\infty$ and $\mathcal{R}=\varnothing$ which will hold the the 
 best cost so far and the rejected vertices, respectively. During the runtime of the algorithm, a vertex is either expanded if its heuristics 
 or label satisfies the necessary conditions with respect to $\mathcal{L}$ or rejected and thus added in the set $\mathcal{R}$.
-The algorithm halts when there is one search side with no more candidates to be expanded.
+The algorithm halts when there is one search side with no more candidates to be expanded. 
 
 
 
@@ -136,6 +136,7 @@ NBA*, shared by both processes and contains the vertices, say $v$, with finite l
 and $\mathcal{S}$ are updated by both processes in parallel, it is possible that there would be a race condition and some vertex 
 in one thread may be expanded due to the race conditions. However, this does not affect the admissibility of PNBA*.
 While this may incur some overhead due to expanding additional vertices, parallelism makes up for the additional overhead costs.\cite{Rios2011}
+Further discussion is in Chapter 3 of this paper.
 
 \subsection{Parallelism by Hashing}
 The Hash Distributed A* Algorithm (HDA*) builds on the the hash-based work distribution of PRA* and asynchronous communication

@@ -2,69 +2,329 @@
 \chapter{Technical Background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-A superstring is simply a string over
-some alphabet for which given a set of string from the same
-alphabet, the latter's members are all substrings of the former.
-To understand the SCS problem, it is best to assume some important concepts
-related to the problem itself. First, let
-us assume some set $R = \{x_1, \ldots , x_n\}$ as
- a set of strings (or blocks) over some alphabet $\Sigma$. 
-Formally, we define a $superstring$ of $R$ as a 
-string $w$ containing each $x_i \in R$, as a substring.
+\section{Graph Theoretic Preliminaries}
+A weighted, directed graph $G=(V,E)$ with $V$ being the set of vertices of $G$ and $E$ being the set 
+of edges of $G$ is said to be a graph with an associated weight function $w:E\to\mathbb{R}$ mapping the edges of $G$
+to real-valued weights. The $\walk{u}{v}$, where $u,v\in V$ is a sequence of vertices $(u, u_1, u_2,\dots,v)$ where 
+consecutive vertices are adjacent to each other in $G$. A $\graphpath{u}{v}$ is a $\walk{u}{v}$ with no repeating vertices,
+implicitly, no repeating edges.
 
-Following are the elementary operations associated 
-with the construction of a superstring.
-The $overlap(u, v)$ of two strings $u$ and $v$ 
-is the maximum overlap between $u$ and $v$. That is to say,
-the longest suffix of $u$ (in terms of characters) that is a prefix of $v$.
-The $prefix(u, v)$ of $u$ and $v$ is the prefix of $u$
-obtained by removing its overlap with $v$.
-Lastly, $merge(u, v)$ is the
- concatenation of $u$ and $v$ with the overlap appearing
-only once.
+In this paper, an edge is denoted by the two vertices incident of the edge. Example, for two vertices $u$, $v$ in a graph, 
+an edge between $u$ and $v$ would be denoted by $uv$. Hence, a path $(v_0, v_1, \dots, v_n)$ has edges
+$\{v_0v_1, v_1v_2,\dots, v_{n-1}v_n\}$. 
 
-As an example, say we have, $\Sigma = \{a, b, c\}$ and $R = \{cbcaca, cacac\}$.
-The string $cacacbcaca$ is a superstring of $R$ while the string
-$cbcacac$ is the shortest common superstring. The
-following relations also hold: 
+\section{Minimum Cost Paths}
+The minimum cost paths is a discrete optimization problem wherein the goal is to determine 
+the shortest path from a start vertex in a graph to an end vertex in a graph. This paper only 
+deals with single-source shortest path. The shortest path problem can be defined formally as follows.
 
-\begin{tabular}{p{0.5cm}l}
-&$overlap(cbcaca, cacac) = caca$, \\
-&$overlap(cacac, cbcaca) = c$ ,\\
-&$prefix(cbcaca, cacac) = cb$,\\
-&$merge(cbcaca, cacac) = cbcacac$.
-\end{tabular}
+The function $W$ of a path $W(p)$ where $p$ is a path is denoted by the sum of the edges 
+in the path.\cite{CLRS} That is, if some path $p=(v_0, v_1, \dots, v_n)$, the function $W$ is defined as 
+\[
+W(p) = \sum^k_{i=1} w(v_{i-1}v_i). 
+\]
 
-A $superstring$ $w$ is also defined as
- the string $prefix(x_1, x_2) \cdot prefix(x_2, x_3) \cdots prefix(x_n, x_1) \cdot overlap(x_n, x_1)$.
-That is, a $superstring$ is simply
- a concatenation of all the strings ``minus'' the overlapping duplicates.
- Apparently, each superstring of a set of strings defines a permutation of the set’s elements.
-Conversely, every permutation of the set’s elements corresponds to a single superstring
+Hence, the shortest path weight can be defined by the function $\zeta: V\to V$ (a mapping from a vertex in $G$ to another vertex in $G$)
+as follows 
+\[
+\zeta(u, v)=\begin{cases}
+    \text{min}(S_{u\to v}) & \text{if there is a path from $u$ to $v$} \\ 
+    \infty  & \text{otherwise}
+\end{cases}    
+\]
+where $S_{u\to v}$ is the set of weights of all paths from $u$ to $v$, that is, $S_{u\to v}=\{W(p) | p=(u,v_1, v_2,\dots, v)\}$.
+Hence, the \textbf{shortest path} is defined as the path with the shortest weight, that is $W(p)=\zeta(u, v)$.\cite{CLRS}
+
+\section{A* Algorithm}
+While the shortest path in a graph problem can be solved by dynamic programming, other algorithms exist such as branch and bounding algorithms 
+like the A* search.\cite{HartNilssonRaphael1968} The A* search algorithm employs the use of heuristic functions to estimate the cost
+or distance from the current vertex to the final vertex, while keeping in mind the current best. Hence, the A* search can be thought of 
+as an intelligent algorithm in the classical sense. A heuristic function is \textbf{admissible} if it is proven that it will never 
+overestimate the cost of reaching the end vertex. That is, the heuristic function may underestimate or equal the actual cost. 
+Assuming the heuristic function is admissible, then the A* algorithm is considered to be admissible. 
+
+Likewise, the heuristic function of the A* algorithm is \textbf{consistent} or monotone if the estimate of the cost from the current 
+vertex is always less than or equal to the cost of its neighbors in the open set (vertices that haven't been analyzed) to the end vertex
+plus the cost of reaching the neighbor from the current vertex.
+
+\begin{definition}
+    If a vertex $v$ is in the closed set, then it is \textbf{expanded}. Likewise, \textbf{expanding} $v$ means adding $v$ to the closed set.
+\end{definition}
+
+\begin{algorithm}[H]
+    \begin{algorithmic}[1]
+        \REQUIRE $G$ - the graph
+        \REQUIRE $u$ - start vertex.
+        \REQUIRE $v$ - end vertex 
+        \STATE Let $\Omega$ be the open set.
+        \STATE Let $\Gamma$ be the closed set.
+        \STATE Let $f$ be the evaluating function
+        \STATE Add $u$ to $\Omega$.
+        \WHILE {$\Omega\neq\varnothing$}
+            \STATE Get the vertex $a\in\Omega$ with the minimum $f(a)$.
+            \IF{$a=v$}
+                \STATE Add $a$ to $\Gamma$ and terminate A* search.
+            \ELSE 
+                \STATE Add $a$ to $\Gamma$
+                \STATE Let $N$ be the set of adjacent vertices of $a$ not in the closed set.
+                \STATE For all $n\in N$, add $n$ to $\Omega$.
+                \STATE For neighbors $m$ of $a$ in the closed set
+                \IF {$f(m)$ is lower than the cost when $m$ is expanded}
+                    \STATE Unexpand $m$, that is, add $m$ to the open set 
+                \ENDIF
+            \ENDIF
+        \ENDWHILE
+    \end{algorithmic}
+    \caption{A* Search Algorithm}
+\end{algorithm}
+
+% \begin{algorithm}[H]
+% 	\begin{algorithmic}[1]
+% 	\REQUIRE $R$ - set of strings
+% 	\ENSURE superstring of set $R$
+% 	\WHILE{||$R$|| > 1}
+% 		\STATE choose $x_1 \neq x_2 \in R$ such that $overlap(x_1,x_2)$ is maximal 
+% 		\STATE $R \leftarrow (R - \{x_1, x_2\}) \cup \{merge(x_1, x_2)\}$
+% 	\ENDWHILE
+% 	\RETURN remaining string in $R$
+% 	\end{algorithmic}
+% 	\caption{GREEDY(R)}
+% 	\label{alg:seq}
+% \end{algorithm}
+
+\section{Parallel A* Algorithm}
+Two parallel methods described will be used in this paper. Specifically, HDA* and PNBA*.\cite{Kishimoto2009,Rios2011}
+
+\subsection{PNBA*}
+The PNBA* is a parallelization of the bidirection A* algorithm. One of the main advantages of computing the shortest path 
+bidirectionally is that it reduces the search space and search effort.\cite{KainlKainz1997,Pijls2009}. The execution of the PNBA*
+can be done on a computer with two CPU cores (or two CPUs). One CPU searches forwardly, that is, from the start vertex, it finds a 
+path to the end vertex. The other CPU searches backwardly wherein it starts from the end vertex to the start vertex. The PNBA* heuristic function 
+need not impose that the used heuristic function is admissible. That is, only consistency is needed. As discussed in Chapter 2, the PNBA* is a 
+parallelized version of the NBA*. Since the NBA* employs alternating execution between the two directions, it may be distributed on two different 
+CPU cores as demonstrated by Rios and Chaimowicz. The PNBA* can use a data structure such as a priority queue. Each direction will have their own 
+priority queue to serve as the open set $\Omega_p$ for $p\in\{1,2\}$, for each process $p$, as stated in the paper by Rios and Chaimowicz.
+
+\begin{definition}
+    A vertex $v$ is \textbf{labeled} if the estimate $g(v)$ (the shortest path found so far, that is, an estimate of $\zeta(v_{start}, v)$)
+    is finite and $v$ hasn't been expanded.
+\end{definition}
+
+The paper establishes the following notational convention to be used for the rest of the paper with regards to the PNBA* algorithm. 
+Two processes exist, namely process $p$ in $p\in\{1,2\}$. Whenever $p$ is used, it is implied that $p$ is the process number, i.e the CPU being 
+referenced. Let $h_p(v)=\zeta_p(v, v_{goal})$ be the heuristic for estimating the cost from the current vertex $v$ to the goal vertex $v_{goal}$.
+Likewise, let $g_p(v)=\zeta_p(v_{start}, v)$ be shortest path so far. The shared set $\mathcal{M}$ contains the vertices in the middle of the two searches.
+Initially, all vertices are in $\mathcal{M}$. The shared variable $\mathcal{L}$, the best solution so far, initially set to $\infty$ since 
+the algorithm will need to minimize $\mathcal{L}$ as small as possible. The variable $F_p$ is the lowest $f_p$-value of $\Omega_p$ where $f_p(v)=h_p(v)+g_p(v)$.
+The variables $f_p$, $g_p$, and $F_p$ can be written only by process $p$ but can be read by both. Note that it is best to implement the open sets $\Omega_p$.
+
+Though an abuse of notation, if $p\in\{1,2\}$ then $\neg:\{1,2\}\to\{1,2\}$ is described as follows:
+$$
+\neg p=\begin{cases}
+    1 & \text{if } p=2 \\ 
+    2 & \text{if } p = 1.
+\end{cases}
+$$
+
+\begin{algorithm}[H]
+    \caption{PNBA* (Parallel New Bidirectional A*) Search Algorithm}
+    \begin{algorithmic}
+        \REQUIRE $G$, the graph 
+        \REQUIRE $u$, start vertex and $v$, the end vertex
+        \STATE Let $\mathcal{M}$ contain all vertices in $G$ and for all $m\in\mathcal{M}$, let $g_p(m)=\infty$.
+        \STATE Let $s_1=t_2=u$ and $s_2=t_1=v$.
+        \STATE Set $g_p(s_p) = 0$ and add $s_p$ into $\Omega_p$.
+        \STATE From here on, all instructions are run in parallel.
+        \WHILE {$\Omega_1\neq\varnothing$ or $\Omega_2\neq\varnothing$}
+            \STATE Get the vertex $n\in\Omega_p$ with the minimum $f_p(n)$.
+            \IF {$n\in\mathcal{M}$}
+                \IF {$f_p(n)<\mathcal{L}$ and $g_p(n)+F_{\neg p}-h_p(n)<\mathcal{L}$}
+                    \FORALL {$m$ is a neighbor of $n$ and $m$ is not expanded}
+                        \IF {$m\in\mathcal{M}$ and $g_p(m)>g_p(n)+\zeta_p(nm)$}
+                            \STATE Set $g_p(m)=g_p(n)+\zeta_p(nm)$
+                            \STATE Set $f_p(m)=g_p(m)+h_p(m)$
+                            \IF {$m\in\Omega_p$}
+                                \STATE Remove $m$ from $\Omega_p$ 
+                            \ENDIF
+                            \STATE Insert $m$ to $\Omega_p$.
+                            \IF {$g_1(m)+g_2(m)<\mathcal{L}$}
+                                \STATE Lock $\mathcal{L}$ to ensure that $F_p$ and $L$ are monotonic.
+                                \IF {$g_1(m)+g_2(m)<\mathcal{L}$}
+                                    \STATE Set $\mathcal{L}=g_1(m)+g_2(m)$.
+                                \ENDIF
+                                \STATE Unlock $\mathcal{L}$ after the update.
+                            \ENDIF
+                        \ENDIF
+                    \ENDFOR
+                \ENDIF
+                \STATE Remove vertex $n$ from $\mathcal{M}$.
+            \ENDIF
+            \IF {$\Omega_p\neq\varnothing$}
+                \STATE Set $F_p$ with the lowest $f_p$-value in $\Omega_p$.
+            \ENDIF
+        \ENDWHILE
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{HDA*}
+Unlike the PNBA*, the Hash-Distributed A* Search can employ the use of as many CPU cores as desired.\cite{Kishimoto2009} One 
+of the main advantages of this is that it can easily be implemented on a GPU with hundreds or thousands of cores, thereby, 
+execution would be faster. In the PNBA*, each process has different closed and open sets but in the HDA*, 
+these sets are a parallel data structure shared among each CPU cores. However, there is a hash function $k:V(G)\to P$ where 
+$V(G)$ is the set of vertices in $G$ and $P$ is the set of processors. When a new vertex is found and the hash function is computed for 
+the vertex, the algorithm determines which CPU core should own the vertex based on the hash function.\footnote{Like how a hashmap works}
+Thereby, while the open and closed sets are implemented as a parallel data structure, each processor owns a space 
+in the open and closed set denoted by $\Omega_p$ and $\Gamma_p$ respectively for processor $p$, based on the hash key.
+
+\begin{algorithm}[H]
+    \caption{HDA* (Hash-Distributed A*) Search Algorithm}
+    \begin{algorithmic}
+        \REQUIRE $G$, the graph 
+        \REQUIRE $u$, the start vertex 
+        \REQUIRE $v$, the goal vertex
+        \STATE Let $\Omega$ be the open set and $\Gamma$ be the closed set. Let $f$ be the evaluating function.
+        \STATE Add $u$ to $\Omega$
+        \STATE Everything from here on is run in parallel. Each processor $p$ runs the while loop below.
+        \WHILE {global $\Omega\neq\varnothing$}
+            \IF {$p$ has a new vertex $a$ in its message queue.}
+                \IF {$a\notin\Gamma_p$}
+                    \STATE Add $a$ to $\Omega_p$.
+                \ENDIF
+            \ELSE
+                \STATE Get the vertex $a$ with the minimum $f(a)$ from $\Omega_p$.
+                \STATE Let $N$ be the set of neighbors of $a$ not in $\Gamma_p$.
+                \STATE Compute hash key $k(n)$ for all $n\in N$
+                \STATE Let $p'$ be the processor that owns the hash key $k(n)$.
+                \WHILE {The message queue of $p'$ is locked by another processor}
+                    \STATE Wait
+                \ENDWHILE
+                \STATE Lock $p'$ message queue
+                \STATE Send $n$ to $p'$
+                \STATE Unlock $'$ message queue.       
+            \ENDIF
+        \ENDWHILE
+    \end{algorithmic}
+\end{algorithm}
+
+\section{Haskell Parallel Runtime}
+Haskell's parallel execution is implicit and can be done in a monadic environment.\cite{Marlow2013}
+Since Haskell is a functional program, the task of parallelization is made easy by the runtime 
+by \lstinline{rpar} and \lstinline{rseq} and by specifying strategies on how haskell should 
+parallelize the task. However, the Glasgow Haskell Compiler (GHC) runtime may or may not parallelize 
+the function at all, this is because \lstinline{rpar} sparks the function for parallelization, that is,
+there is a potential that it may be parallelized.\cite{Marlow2005} A common problem for parallelization 
+in Haskell is that the runtime garbage collection might take more time compared to the actual algorithm 
+execution, therefore decreasing efficiency significantly. This can be mitigated and prevented by analyzing 
+the granularity of the data structures. For example,
+\begin{lstlisting}[language=Haskell]
+    -- We have a list of 10000 elements
+    xs = [0..10000]
+    -- square all elements of xs
+    xs' = (^2) <$> xs
+    -- execute in parallel
+    runEval (evalList xs')
+\end{lstlisting}
+This example is inefficient since the GHC runtime will assign each element of \lstinline{xs} to a different 
+thread, thereby increasing CPU overhead and garbage collection since the inexpensive task of squaring 
+numbers is undermined by the more expensive task of garbage collection. A better implementation would be 
+\begin{lstlisting}[language=Haskell]
+    -- We have a list of 10000 elements
+    xs = [0..10000]
+    -- square all elements of xs
+    xs' = (^2) <$> xs
+    -- execute in parallel
+    runEval (parListChunk 5000 xs')
+\end{lstlisting}
+In this example, the GHC runtime will divide the list into two and have two different processors 
+evaluate the two sublists. This way, the processor assignment and garbage collection overhead will be minimized.
+
+Hence, in Haskell, problems of parallelization switched from the implementation details such as deadlocks, 
+race conditions, and others commonly encountered in other languages, to that of the dividing the task into 
+chunks that GHC will be performant.
+
+\section{Maze Generation}
+The mazes were generated using Python and exported to a text file using Depth-First-Search algorithm.
+Since the depth-first search algorithm is guaranteed to produce a solvable maze, the researchers chose to use 
+depth-first search when generating the maze.
+
+Two versions of the DFS algorithm were used. One of them were randomized node selection while exploring the grid.
+The second was to choose randomly whether the selected node will remain open, that is, have no wall, or to be closed.
+The randomization of the DFS algorithm will generate a more robust and unpredicted maze generation that ensures 
+there are multiple ways to solve a given maze.\cite{CLRS}
+
+% Likewise, we discuss the graph representation we will use (adjacency list vs adjacency matrix)
+% and how Haskell's parallelization works with respect to the Haskell Runtime, such as how 
+% sparks are created which may or may not be parallelized at all! 
+
+% We're still debating whether to use the Categorical Abstract Machine so there's no loss of generality 
+% over different programming languages. If so, we will discuss a little bit of the syntax and notation for formality.
+% If not, we will skip this step and proceed with using a concrete implementation of Haskell.
+
+% Here, we discuss the original A* algorithm which is implemented in abstracted Haskell and two different parallel A* algorithm in 
+% a Python-like pseudocode, specifically, PBA* and HDA*.
+% A superstring is simply a string over
+% some alphabet for which given a set of string from the same
+% alphabet, the latter's members are all substrings of the former.
+% To understand the SCS problem, it is best to assume some important concepts
+% related to the problem itself. First, let
+% us assume some set $R = \{x_1, \ldots , x_n\}$ as
+%  a set of strings (or blocks) over some alphabet $\Sigma$. 
+% Formally, we define a $superstring$ of $R$ as a 
+% string $w$ containing each $x_i \in R$, as a substring.
+
+% Following are the elementary operations associated 
+% with the construction of a superstring.
+% The $overlap(u, v)$ of two strings $u$ and $v$ 
+% is the maximum overlap between $u$ and $v$. That is to say,
+% the longest suffix of $u$ (in terms of characters) that is a prefix of $v$.
+% The $prefix(u, v)$ of $u$ and $v$ is the prefix of $u$
+% obtained by removing its overlap with $v$.
+% Lastly, $merge(u, v)$ is the
+%  concatenation of $u$ and $v$ with the overlap appearing
+% only once.
+
+% As an example, say we have, $\Sigma = \{a, b, c\}$ and $R = \{cbcaca, cacac\}$.
+% The string $cacacbcaca$ is a superstring of $R$ while the string
+% $cbcacac$ is the shortest common superstring. The
+% following relations also hold: 
+
+% \begin{tabular}{p{0.5cm}l}
+% &$overlap(cbcaca, cacac) = caca$, \\
+% &$overlap(cacac, cbcaca) = c$ ,\\
+% &$prefix(cbcaca, cacac) = cb$,\\
+% &$merge(cbcaca, cacac) = cbcacac$.
+% \end{tabular}
+
+% A $superstring$ $w$ is also defined as
+%  the string $prefix(x_1, x_2) \cdot prefix(x_2, x_3) \cdots prefix(x_n, x_1) \cdot overlap(x_n, x_1)$.
+% That is, a $superstring$ is simply
+%  a concatenation of all the strings ``minus'' the overlapping duplicates.
+%  Apparently, each superstring of a set of strings defines a permutation of the set’s elements.
+% Conversely, every permutation of the set’s elements corresponds to a single superstring
 			 
-Our interest however lies on defining the SCS problem.
-Essentially, the SCS problem is: Given a set of strings $R$
-and a positive integer $K$, does $R$ have a superstring of length $K$?
+% Our interest however lies on defining the SCS problem.
+% Essentially, the SCS problem is: Given a set of strings $R$
+% and a positive integer $K$, does $R$ have a superstring of length $K$?
 
-Figure \ref{fig:scsdp} shows the SCS Decision Problem following the template
-provided by Garey and Johnson \cite{GareyJohnson1979}.
+% Figure \ref{fig:scsdp} shows the SCS Decision Problem following the template
+% provided by Garey and Johnson \cite{GareyJohnson1979}.
 
-\begin{figure}[ht!]
-\centering
-\fbox{
-\begin{tabular}{p{7.5cm}}
+% \begin{figure}[ht!]
+% \centering
+% \fbox{
+% \begin{tabular}{p{7.5cm}}
 
-INSTANCE: \\
-Finite alphabet $\Sigma$, finite set $R$ of strings from $\Sigma^*$ and a positive integer $K$. \\
-QUESTION: \\
-Is there a string $w \in \Sigma^*$ with $\vert w\vert \leq K$ such that each string $x\in R$ is a substring of w, 
-i.e. $w=w_0 x w_1$ where  $w_0,w_1\in\Sigma^*$? \\
-\end{tabular}
-}
-\caption{SCS Decision Problem }
-\label{fig:scsdp}
-\end{figure}
+% INSTANCE: \\
+% Finite alphabet $\Sigma$, finite set $R$ of strings from $\Sigma^*$ and a positive integer $K$. \\
+% QUESTION: \\
+% Is there a string $w \in \Sigma^*$ with $\vert w\vert \leq K$ such that each string $x\in R$ is a substring of w, 
+% i.e. $w=w_0 x w_1$ where  $w_0,w_1\in\Sigma^*$? \\
+% \end{tabular}
+% }
+% \caption{SCS Decision Problem }
+% \label{fig:scsdp}
+% \end{figure}
 
 
-In the Compendium of NP Optimization problems published by \cite{AusielloEtAl2000} and in the list of 
-NP-Complete Problems published by \cite{GareyJohnson1979} the SCS problem appears under under Storage and Retrieval (SR).
+% In the Compendium of NP Optimization problems published by \cite{AusielloEtAl2000} and in the list of 
+% NP-Complete Problems published by \cite{GareyJohnson1979} the SCS problem appears under under Storage and Retrieval (SR).
