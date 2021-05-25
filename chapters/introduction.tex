@@ -61,14 +61,21 @@ to critical systems to use a more provable programming language.
 % a greedy algorithm. 
 
 \section{Project Context}
-The current video game industry is dominated by imperative programmers, even though functional programming had been 
-getting more popular recently especially in web-programming due to to languages such as TypeScript and PureScript and 
-frameworks such as ReactJS which favors a reactive functional approach. Thus, most beginners are exposed to 
-imperative algorithms, such as the A*, due to the popularty of algorithm books with imperative programming in them.\cite{CLRS,Knuth1997,Skiena}
-However, algorithms designed for imperative programming may not translate as well when implemented in a functional style.
-The quicksort specification maintains a worst-case space complexity of $O(n)$. However, when the algorithm is written in a 
-pure-function style, it will have to copy every subarray due to its recursive nature, thus yielding  a worst-case space complexity 
-of $O(n^2)$. 
+The Therac-25 medical radiation machine caused at overdose accidents in which it harmed at least six patients using the machine.
+One of the main causes of the problem was due to poor software engineering practices and that testing the software was
+not enough.\cite{Therac1}
+Most critical systems such as flight software, navigation, and military software is written in languages that may not guarantee 
+correctness of programs such as C where adding $1$ to an \verb|int8| whose value is $65535$ may cause the program to show the 
+incorrect sum of $-65536$. These kinds of problems often lead to software crashes and cause unexpected failures.
+Also, the video game industry is dominated by imperative programming languages. However, due to the rise of 
+languages such as TypeScript and PureScript, and frameworks such as ReactJS which favors a reactive functional programming approach,
+it is not fanciful to say that games might start being written in the functional style as well. 
+
+However, the functional style of programming has a different set of problems compared to its imperative counterpart such as 
+obscurity for some programmers (though, this is subjective) and increased space complexity for the same algorithm. Multiple 
+algorithms for the imperative approaches may not translate well and may even increase the time and space complexity for the functional 
+approach due to its nature of copying the data structure instead of iterating over.
+
 
 The advantages of functional programming lies with its \emph{referential transparency} which means that 
 a function definition or a variable will never change its definition throughout the runtime of the program.\cite{Kesseler1996,Hammond2011}
@@ -93,35 +100,50 @@ as STMs or MVars\cite{Marlow2013}.
 
 The A* Pathfinding algorithm is used heavily in video games, telephone traffic, 
 and other graph traversal problems\cite{HartNilssonRaphael1968}. This research 
-aims to aid in the development of video games and other uses where a parallel 
-A* algorithm would be beneficial using the functional 
-programming paradigm in the future as video game development is dominated 
-by imperative languages.
+aims to aid in the development of video games and in developing safer critical systems 
+with stricter error-checking and type safety.\cite{NasaCopilot2020} 
 
 \section{Objectives}
-The main objective of the research is to find an efficient parallel purely-functional implementation 
-of the A* pathfinding algorithm. The research will be done mostly in Haskell with some exceptions.
-Likewise, concrete comparisons between the number of cores and logical threads will be used to measure 
-the most efficient performance runtime and space complexity of the algorithm.
+The main objective of the research is to develop functional implementations of two different
+parallel A* implementations. The research will be done using Haskell and Rust as a comparative metric for
+imperative languages. Likewise, concrete comparisons between the number of cores and logical threads will be 
+used to measure the most efficient runtime and space complexity of both algorithms.
 
-The researchers aim to complete the following specific tasks:
+The researchers aim to complete the following tasks:
 \begin{itemize}
-    \item Write a \emph{generator} that will generate an arbitrary-sized maze. The maze should be relatively 
-        hard to solve without the aid of computers in a short amount of time.\cite{Buck2015}
-    \item And a \emph{solver} program that will be written in Haskell, a lazy purely-functional programming language,
-        for translating the output of the generator to a graph.\cite{HaskellSite}
-    \item The solver program should have a web-based user interface where the researchers can view the maze and how 
-        the solver program was able to solve it correctly.
-    \item Performance of the solution shall be measured by using ThreadScope to monitor the thread and core activities 
-        while the program is being run.\cite{ThreadScope}
+    \item Model multiple combinatorial problems such as the $n$-queens problem and Sudoku. These problems 
+        may or may not have different problem sizes.
+    \item A solver will be written both in Haskell, a laze purely-functional programming language, and Rust, 
+        a relatively modern systems programming language that shares multiple features with Haskell.
+    \item Two algorithms will be written in both languages and their performance will be recorded. The program
+        Threadscope will be utilized for recording the performance of the Haskell solvers, such as thread and core 
+        activities while the program is being run.
 \end{itemize}
+
+% The main objective of the research is to find an efficient parallel purely-functional implementation 
+% of the A* pathfinding algorithm. The research will be done mostly in Haskell with some exceptions.
+% Likewise, concrete comparisons between the number of cores and logical threads will be used to measure 
+% the most efficient performance runtime and space complexity of the algorithm.
+
+% The researchers aim to complete the following specific tasks:
+% \begin{itemize}
+%     \item Write a \emph{generator} that will generate an arbitrary-sized maze. The maze should be relatively 
+%         hard to solve without the aid of computers in a short amount of time.\cite{Buck2015}
+%     \item And a \emph{solver} program that will be written in Haskell, a lazy purely-functional programming language,
+%         for translating the output of the generator to a graph.\cite{HaskellSite}
+%     \item The solver program should have a web-based user interface where the researchers can view the maze and how 
+%         the solver program was able to solve it correctly.
+%     \item Performance of the solution shall be measured by using ThreadScope to monitor the thread and core activities 
+%         while the program is being run.\cite{ThreadScope}
+% \end{itemize}
 % \vfill\eject
 \section{Scope and Limitations}
 
-The research will only cover solvable-mazes as the A* algorithm does not halt when there is no reachable end goal (e.g,
-the start vertex and end vertex lie on different components of the graph).\cite{HartNilssonRaphael1968} Likewise, there will be no generality
-and all programs will be written in Haskell. Translation to other functional programming languages is not a priority and, thus,
-lambda notation will not be used. Other concurrent data structures besides MVar and Software Trasnactional Memory will not be utilized.
+The research will only cover Haskell, though it may generalize to other functional languages that support a parallel 
+and concurrent approach. Translation to other functional programming languages is not a priority and thus, the use 
+of abstract machines or lambda calculus notation will not be used. The researches deem that using a pure functional language 
+such as Haskell will enable it to generalize well even on impure languages such as LISP.
+Also, only problems where solutions exist will be tested on. 
 
 The concrete implementation and analysis is planned to be tested only on four CPUs such as Intel Core i7-9750H and AMD Ryzen 5 3500x.
 Other CPU architectures are not planned to be tested on.

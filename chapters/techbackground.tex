@@ -47,36 +47,88 @@ Likewise, the heuristic function of the A* algorithm is \textbf{consistent} or m
 vertex is always less than or equal to the cost of its neighbors in the open set (vertices that haven't been analyzed) to the end vertex
 plus the cost of reaching the neighbor from the current vertex.
 
+In this version of the A* algorithm, the $f$-value, that is the heuristic that the algorithm is minimizing,
+is computed and added as the sorting factor for the priority queue, which may be implemented as a minimum binary heap.
+Assume that every mention of priority queue is a minimum priority queue. Likewise, the pseudocode does not enforce 
+strict typing, that is, it is possible to operate on two data different data structures with the same type class, for easier 
+readability. However, note that this is illegal in actual Haskell.
+
 \begin{definition}
     If a vertex $v$ is in the closed set, then it is \textbf{expanded}. Likewise, \textbf{expanding} $v$ means adding $v$ to the closed set.
 \end{definition}
 
-\begin{algorithm}[H]
-    \begin{algorithmic}[1]
-        \REQUIRE $G$ - the graph
-        \REQUIRE $u$ - start vertex.
-        \REQUIRE $v$ - end vertex 
-        \STATE Let $\Omega$ be the open set.
-        \STATE Let $\Gamma$ be the closed set.
-        \STATE Let $f$ be the evaluating function
-        \STATE Add $u$ to $\Omega$.
-        \WHILE {$\Omega\neq\varnothing$}
-            \STATE Get the vertex $a\in\Omega$ with the minimum $f(a)$.
-            \IF{$a=v$}
-                \STATE Add $a$ to $\Gamma$ and terminate A* search.
-            \ELSE 
-                \STATE Add $a$ to $\Gamma$
-                \STATE Let $N$ be the set of adjacent vertices of $a$ not in the closed set.
-                \STATE For all $n\in N$, add $n$ to $\Omega$.
-                \STATE For neighbors $m$ of $a$ in the closed set
-                \IF {$f(m)$ is lower than the cost when $m$ is expanded}
-                    \STATE Unexpand $m$, that is, add $m$ to the open set 
-                \ENDIF
-            \ENDIF
-        \ENDWHILE
-    \end{algorithmic}
-    \caption{A* Search Algorithm}
-\end{algorithm}
+
+\begin{lstlisting}[language=Haskell, caption=A* Pseudocode]
+    astar :: Graph -> Vertex -> Vertex -> HashMap Vertex Vertex 
+    astar g u = astar' trail open closed g u
+        where open   = newMinPQueue (u, f u)   -- Add the vertex u to the priority queue 
+                                               -- And along with it, its heuristic f-value
+              closed = emptyMinPQueue          -- The closed sed is initially empty.
+              trail  = emptyHashMap            -- A hashmap with the vertex as the key and its value will be the vertex 
+                                               -- that it comes from (with respect to the start vertex)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Haskell, caption=A* Helper Function Pseudocode]
+    astar' :: HashMap Vertex Vertex  -- A HashMap to store the vertex and its parent 
+           -> PriorityQueue -> PriorityQueue -- open and closed sets
+           -> Graph                  -- The graph in question
+           -> Vertex -> Vertex       -- start and end vertices 
+           -> HashMap Vertex Vertex  -- Return the hashmap. Use this for path reconstruction
+    astar' trailMap open closed g u v
+        | a == v || null open = trailMap    -- A* has reached the goal or open set is null 
+        | otherwise           = astar' trailMap' newOpen' newClosed g u v
+        where
+            -- Get from the open set, the node with lowest f-value 
+            ((a, fa), open') = getMinFromPQueue open        
+            -- neighbors of a in graph g
+            currentN         = neighbors a g
+            -- neighbors of a in g not in the closed set
+            notExpandedN     = filter (flip . notElem closed) currentN
+            -- neighbors of a in the closed set
+            closedSetN       = filter (flip . elem closed) currentN
+            -- Compute the f-value of each n in currentN first, 
+            -- and then add them to the open priority queue
+            newOpen          = foldl insertPQueue open' (f <\dollar> notExpandedN)
+            -- For all elements n in closedSetN, check if the f-value is lower 
+            -- than the cost when n is not expanded.
+            -- If f(n) is lower, then add n to the open set 
+            newOpen'         = foldl insertPQueue newOpen (f <\dollar> closedSetN)
+            -- Add all members of currentN to the hashmap with a as their parent vertex 
+            trailMap'        = foldl (\acc x -> insertHashMap acc x a) trailMap currentN
+            -- Get the intersection of the closed set and newOpen'
+            -- and subtract the intersection from closedSetN
+            -- This is simply to get all the vertices that will not be expanded 
+            closed'          = (intersection closed newOpen') \\ closedSetN
+            -- Add all members of closed' to the new closed set
+            newClosed        = foldl insertPQueue closed closed'
+\end{lstlisting}
+
+% \begin{algorithm}[H]
+%     \begin{algorithmic}[1]
+%         \REQUIRE $G$ - the graph
+%         \REQUIRE $u$ - start vertex.
+%         \REQUIRE $v$ - end vertex 
+%         \STATE Let $\Omega$ be the open set.
+%         \STATE Let $\Gamma$ be the closed set.
+%         \STATE Let $f$ be the evaluating function
+%         \STATE Add $u$ to $\Omega$.
+%         \WHILE {$\Omega\neq\varnothing$}
+%             \STATE Get the vertex $a\in\Omega$ with the minimum $f(a)$.
+%             \IF{$a=v$}
+%                 \STATE Add $a$ to $\Gamma$ and terminate A* search.
+%             \ELSE 
+%                 \STATE Add $a$ to $\Gamma$
+%                 \STATE Let $N$ be the set of adjacent vertices of $a$ not in the closed set.
+%                 \STATE For all $n\in N$, add $n$ to $\Omega$.
+%                 \STATE For neighbors $m$ of $a$ in the closed set
+%                 \IF {$f(m)$ is lower than the cost when $m$ is expanded}
+%                     \STATE Unexpand $m$, that is, add $m$ to the open set 
+%                 \ENDIF
+%             \ENDIF
+%         \ENDWHILE
+%     \end{algorithmic}
+%     \caption{A* Search Algorithm}
+% \end{algorithm}
 
 % \begin{algorithm}[H]
 % 	\begin{algorithmic}[1]
@@ -125,6 +177,8 @@ $$
     2 & \text{if } p = 1.
 \end{cases}
 $$
+
+The $\neg p$ notation will be used whenever the other processor needs to be referenced while the current processor is running.
 
 \begin{algorithm}[H]
     \caption{PNBA* (Parallel New Bidirectional A*) Search Algorithm}
@@ -176,7 +230,7 @@ the vertex, the algorithm determines which CPU core should own the vertex based 
 Thereby, while the open and closed sets are implemented as a parallel data structure, each processor owns a space 
 in the open and closed set denoted by $\Omega_p$ and $\Gamma_p$ respectively for processor $p$, based on the hash key.
 
-\begin{algorithm}[H]
+\begin{algorithm}[hb]
     \caption{HDA* (Hash-Distributed A*) Search Algorithm}
     \begin{algorithmic}
         \REQUIRE $G$, the graph 
@@ -216,14 +270,16 @@ there is a potential that it may be parallelized.\cite{Marlow2005} A common prob
 in Haskell is that the runtime garbage collection might take more time compared to the actual algorithm 
 execution, therefore decreasing efficiency significantly. This can be mitigated and prevented by analyzing 
 the granularity of the data structures. For example,
+
 \begin{lstlisting}[language=Haskell]
     -- We have a list of 10000 elements
     xs = [0..10000]
     -- square all elements of xs
-    xs' = (^2) <$> xs
+    xs' = (^2) <\dollar> xs
     -- execute in parallel
     runEval (evalList xs')
 \end{lstlisting}
+
 This example is inefficient since the GHC runtime will assign each element of \lstinline{xs} to a different 
 thread, thereby increasing CPU overhead and garbage collection since the inexpensive task of squaring 
 numbers is undermined by the more expensive task of garbage collection. A better implementation would be 
@@ -231,7 +287,7 @@ numbers is undermined by the more expensive task of garbage collection. A better
     -- We have a list of 10000 elements
     xs = [0..10000]
     -- square all elements of xs
-    xs' = (^2) <$> xs
+    xs' = (^2) <\dollar> xs
     -- execute in parallel
     runEval (parListChunk 5000 xs')
 \end{lstlisting}
@@ -242,15 +298,15 @@ Hence, in Haskell, problems of parallelization switched from the implementation 
 race conditions, and others commonly encountered in other languages, to that of the dividing the task into 
 chunks that GHC will be performant.
 
-\section{Maze Generation}
-The mazes were generated using Python and exported to a text file using Depth-First-Search algorithm.
-Since the depth-first search algorithm is guaranteed to produce a solvable maze, the researchers chose to use 
-depth-first search when generating the maze.
+% \section{Maze Generation}
+% The mazes were generated using Python and exported to a text file using Depth-First-Search algorithm.
+% Since the depth-first search algorithm is guaranteed to produce a solvable maze, the researchers chose to use 
+% depth-first search when generating the maze.
 
-Two versions of the DFS algorithm were used. One of them were randomized node selection while exploring the grid.
-The second was to choose randomly whether the selected node will remain open, that is, have no wall, or to be closed.
-The randomization of the DFS algorithm will generate a more robust and unpredicted maze generation that ensures 
-there are multiple ways to solve a given maze.\cite{CLRS}
+% Two versions of the DFS algorithm were used. One of them were randomized node selection while exploring the grid.
+% The second was to choose randomly whether the selected node will remain open, that is, have no wall, or to be closed.
+% The randomization of the DFS algorithm will generate a more robust and unpredicted maze generation that ensures 
+% there are multiple ways to solve a given maze.\cite{CLRS}
 
 % Likewise, we discuss the graph representation we will use (adjacency list vs adjacency matrix)
 % and how Haskell's parallelization works with respect to the Haskell Runtime, such as how 

@@ -2,13 +2,44 @@
 \chapter{Methodology}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Methodology stuff will appear here.
+\section{Experimentation}
+The researchers would write multiple programs in Haskell to solve combinatorial problems.
+Likewise, previous papers from HDA* and PNBA* will be reimplemented using Rust due to its 
+Algebraic Data Types, much like Haskell, and its zero-cost abstraction features, which will
+be utilized as to compare the performance of the algorithm if implemented in either 
+programming disciplines.\cite{Kishimoto2009,Rios2011}
 
+\section{Data Gathering and Documentation}
+Run times on different systems with different CPU cores will be recorded, such as 
+idle times, thread sparking, and garbage collection, using Threadscope.\cite{ThreadScope} Results will be recorded 
+in a tabular format and plotted with its performance metrics with respect to the problem size 
+and performance for each number of CPU cores.
+Comparisons between both CPU run times and CPU core activities will be made to examine each
+problem for each alorithm for both the Haskell implementation and Rust implementation. 
+Metrics will be plotted in the same figure for ease of readability.
 
-\section{Systems Analysis}
+\section{Combinatorial Problems}
 
-\section{Systems Design}
+To make the results of the paper more reliable, multiple combinatorial problems will be tested
+upon and recorded. The problems are handpicked from previous researches and some of the problems 
+are classic combinatorial problems that might provide interesting results when testing the program.
+\begin{itemize}
+    \item \textbf{Freecell} is a solitaire-like card game employing the standard 52-deck card. 
+        An optimal solution is when the program finds a way to stack all the cards in their 
+        corresponding stack with the same suit and in a chronological order.
+    \item \textbf{Sokoban} is a puzzle video game in which the player's requirement to win is to 
+        push the boxes into corresponding storage locations. Since Sokoban has many levels that 
+        rage from easy to difficult, these levels of difficulty can be used as a \emph{problem size} 
+        when recording the experiment. An optimal solution guarantees the least number of moves 
+        to push the crates and cover their corresponding storage locations.
+    \item \textbf{n-queens problem} is a classic combinatorial problem where there is a standard 
+        chess board and $n$ queens positioned in a way such that no two queens are threatening each other.
+        The $n$-queens problem is a generalization of the eight queens problem which has a total of 
+        92 solutions. 
+    \item \textbf{Sudoku} is another classical combinatorial game with some cells containing numbers 
+        and the goal is to solve the remaining cells.    
+    \item \textbf{Knapsack Problem} is one of the classic optimization problems where the reward is maximized 
+        while the cost is minimized. The problem stated here will be the 0/1 Knapsack Problem which is itself 
+        solvable by a branch and bounding algorithm like the A*.    
+\end{itemize}
 
-\section{Requirements Specification}
-
-\section{Development and Testing}
